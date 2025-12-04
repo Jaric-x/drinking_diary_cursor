@@ -1,93 +1,125 @@
+/* custom-tab-bar/index.wxss */
 .tabbar {
   position: fixed;
+  bottom: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 150rpx;
-  padding-bottom: env(safe-area-inset-bottom);
-  z-index: 999;
+  height: 176rpx;
+  z-index: 1000;
+  pointer-events: none;
 }
 
+/* 毛玻璃背景 */
 .tabbar__blur {
   position: absolute;
-  inset: 0;
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(40px);
-  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.12);
-  border-top-left-radius: 32rpx;
-  border-top-right-radius: 32rpx;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 176rpx;
+  background-color: rgba(242, 242, 247, 0.8);
+  backdrop-filter: blur(40rpx);
+  border-top: 1rpx solid rgba(198, 198, 200, 0.5);
+  pointer-events: auto;
 }
 
+/* 内容区 */
 .tabbar__content {
-  position: absolute;
-  inset: 0;
+  position: relative;
+  height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 200rpx;
+  justify-content: space-around;
+  align-items: flex-start;
+  padding-top: 32rpx;
+  pointer-events: auto;
 }
 
+/* Tab项 */
 .tabbar__item {
+  flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  color: var(--text-secondary);
-  transition: transform 0.2s;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  transition: all 0.3s ease;
 }
 
-.tabbar__item--active {
-  transform: translateY(-6rpx);
+.tabbar__item::after {
+  border: none;
+}
+
+.tabbar__icon-wrapper {
+  width: 160rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .tabbar__icon {
-  width: 72rpx;
-  height: 72rpx;
+  font-size: 64rpx;
+  transition: all 0.3s ease;
+  filter: grayscale(100%);
+  opacity: 0.5;
 }
 
-.tabbar__add-shell {
+.tabbar__item--active .tabbar__icon {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.1);
+}
+
+.tabbar__icon--home {
+  /* Home图标样式 */
+}
+
+.tabbar__icon--user {
+  /* User图标样式 */
+}
+
+/* 中间占位 */
+.tabbar__placeholder {
+  width: 160rpx;
+  flex-shrink: 0;
+}
+
+/* 悬浮Add按钮容器 */
+.tabbar__add-container {
   position: absolute;
   left: 50%;
-  transform: translate(-50%, -40%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.tabbar__add-base {
-  width: 180rpx;
-  height: 180rpx;
-  background: rgba(0, 122, 255, 0.15);
-  border-radius: 50%;
-  box-shadow: 0 -12rpx 30rpx rgba(0, 0, 0, 0.12);
+  top: -48rpx;
+  transform: translateX(-50%);
+  pointer-events: auto;
 }
 
 .tabbar__add {
-  position: absolute;
   width: 112rpx;
   height: 112rpx;
   border-radius: 50%;
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  box-shadow: 0 20rpx 40rpx rgba(0, 122, 255, 0.4);
+  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  box-shadow: 0 8rpx 24rpx rgba(0, 122, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
   padding: 0;
-  transition: transform 0.15s var(--ease-out-expo);
+  transition: all 0.2s var(--ease-out-expo);
 }
 
 .tabbar__add::after {
-  display: none;
-}
-
-.tabbar__add-plus {
-  color: #fff;
-  font-size: 72rpx;
-  line-height: 72rpx;
-  font-weight: 300;
+  border: none;
 }
 
 .tabbar__add--hover {
-  transform: scale(0.9);
+  transform: scale(0.95);
+  box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.3);
 }
 
+.tabbar__add-icon {
+  font-size: 72rpx;
+  color: #FFFFFF;
+  font-weight: 300;
+  line-height: 1;
+}

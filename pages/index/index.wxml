@@ -1,7 +1,131 @@
-<!--index.wxml-->
-<navigation-bar title="Weixin" back="{{false}}" color="black" background="#FFF"></navigation-bar>
-<scroll-view class="scrollarea" scroll-y type="list">
-  <view class="container">
-    Weixin
+<!--pages/index/index.wxml-->
+<view class="home-page">
+  
+  <!-- 动态背景层 -->
+  <view class="bg-layer">
+    <image 
+      wx:if="{{backgroundImage}}" 
+      class="bg-layer__image" 
+      src="{{backgroundImage}}" 
+      mode="aspectFill"
+    />
+    <view class="bg-layer__overlay"></view>
   </view>
-</scroll-view>
+
+  <!-- 顶部导航栏 -->
+  <view class="home-header" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+    <view class="home-header__blur"></view>
+    <view class="home-header__content" style="height: {{navBarHeight}}px;">
+      <text class="home-header__title">微醺笔记</text>
+    </view>
+  </view>
+
+  <!-- 问候语栏 -->
+  <view class="greeting-bar" style="top: {{totalNavHeight}}px;">
+    <view class="greeting-text">
+      <text class="greeting-text__main">{{greeting}}</text>
+    </view>
+    <view class="greeting-avatar">
+      <image 
+        class="greeting-avatar__image" 
+        src="https://picsum.photos/200/200" 
+        mode="aspectFill"
+      />
+    </view>
+  </view>
+
+  <!-- 空状态 -->
+  <view wx:if="{{isEmpty}}" class="empty-state">
+    <text class="empty-state__icon">🍷</text>
+    <text class="empty-state__text">还没有记录</text>
+    <text class="empty-state__hint">点击下方 + 开始记录第一杯酒</text>
+  </view>
+
+  <!-- 双向Swiper卡片流 -->
+  <view wx:else class="card-flow" style="top: {{totalNavHeight + 60}}px;">
+    <!-- 外层垂直Swiper（日期分组） -->
+    <swiper 
+      class="vertical-swiper"
+      vertical="{{true}}"
+      current="{{activeGroupIndex}}"
+      bindchange="onVerticalChange"
+      duration="400"
+      circular="{{false}}"
+    >
+      <block wx:for="{{groupedLogs}}" wx:key="date" wx:for-item="group" wx:for-index="groupIndex">
+        <swiper-item class="vertical-item">
+          
+          <!-- 内层水平Swiper（同日期多条记录） -->
+          <swiper 
+            class="horizontal-swiper"
+            current="{{activeLogIndices[groupIndex] || 0}}"
+            data-group-index="{{groupIndex}}"
+            bindchange="onHorizontalChange"
+            previous-margin="{{group.logs.length > 1 ? '80rpx' : '0'}}"
+            next-margin="{{group.logs.length > 1 ? '80rpx' : '0'}}"
+            duration="300"
+          >
+            <block wx:for="{{group.logs}}" wx:key="id" wx:for-item="log">
+              <swiper-item class="horizontal-item">
+                
+                <!-- 卡片 -->
+                <view 
+                  class="diary-card"
+                  data-id="{{log.id}}"
+                  bindtap="onCardTap"
+                >
+                  <!-- 图片区域 -->
+                  <view class="card-image">
+                    <image 
+                      class="card-image__img" 
+                      src="{{log.imagePath || log.imageUrl}}" 
+                      mode="aspectFill"
+                      lazy-load
+                      binderror="onImageError"
+                    />
+                  </view>
+
+                  <!-- 信息区域 -->
+                  <view class="card-info">
+                    <view class="card-header">
+                      <text class="card-title">{{log.name}}</text>
+                      <view class="card-rating">
+                        <block wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
+                          <text class="card-star {{log.rating >= item ? 'card-star--filled' : ''}}">★</text>
+                        </block>
+                      </view>
+                    </view>
+
+                    <text class="card-description">{{log.notes || '暂无描述'}}</text>
+
+                    <view class="card-footer">
+                      <view class="card-tags">
+                        <block wx:for="{{log.tags}}" wx:key="*this">
+                          <text class="card-tag">{{item}}</text>
+                        </block>
+                      </view>
+                      <text class="card-time">{{log.timeString}}</text>
+                    </view>
+                  </view>
+                </view>
+                
+              </swiper-item>
+            </block>
+          </swiper>
+          
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <!-- 日期指示器 -->
+    <view class="date-indicators">
+      <block wx:for="{{groupedLogs}}" wx:key="date" wx:for-index="idx">
+        <view class="date-indicator {{activeGroupIndex === idx ? 'date-indicator--active' : ''}}">
+          <text wx:if="{{activeGroupIndex === idx}}" class="date-indicator__text">{{item.date}}</text>
+          <view wx:else class="date-indicator__dot"></view>
+        </view>
+      </block>
+    </view>
+  </view>
+
+</view>

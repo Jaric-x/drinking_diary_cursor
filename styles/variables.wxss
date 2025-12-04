@@ -1,0 +1,42 @@
+/* 全局CSS变量 - 基于PRD 1.5视觉设计规范 */
+page {
+  /* 品牌色 */
+  --color-primary: #007AFF;
+  --color-bg: #F2F2F7;
+  --color-card-bg: #FFFFFF;
+  
+  /* 文本色 */
+  --text-main: rgba(0, 0, 0, 0.9);
+  --text-secondary: #3C3C43;
+  --text-placeholder: #999999;
+  
+  /* 功能色 */
+  --color-star: #FF9500;
+  --color-tag-bg: #E5E5EA;
+  --color-tag-active: #007AFF;
+  --color-danger: #FF3B30;
+  --color-success: #34C759;
+  
+  /* 圆角 */
+  --radius-card: 32rpx;
+  --radius-btn: 24rpx;
+  --radius-tag: 999rpx;
+  
+  /* 阴影 */
+  --shadow-card: 0 16rpx 40rpx rgba(0, 0, 0, 0.08);
+  --shadow-float: 0 8rpx 24rpx rgba(0, 0, 0, 0.15);
+  --shadow-btn: 0 8rpx 20rpx rgba(0, 122, 255, 0.2);
+  
+  /* 动画 */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-normal: 300ms;
+  --duration-blur: 1000ms;
+  
+  /* 间距 */
+  --space-xs: 8rpx;
+  --space-sm: 16rpx;
+  --space-md: 24rpx;
+  --space-lg: 32rpx;
+  --space-xl: 48rpx;
+}
+

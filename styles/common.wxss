@@ -1,0 +1,113 @@
+/* 原子化样式类 - 类似Tailwind CSS */
+
+/* Flex布局 */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.flex-center { display: flex; justify-content: center; align-items: center; }
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-wrap { display: flex; flex-wrap: wrap; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+
+/* 文本 */
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-bold { font-weight: bold; }
+.text-semibold { font-weight: 600; }
+.text-main { color: var(--text-main); }
+.text-secondary { color: var(--text-secondary); }
+.text-placeholder { color: var(--text-placeholder); }
+.text-primary { color: var(--color-primary); }
+.text-danger { color: var(--color-danger); }
+
+/* 背景 */
+.bg-white { background-color: #FFFFFF; }
+.bg-gray { background-color: var(--color-bg); }
+.bg-primary { background-color: var(--color-primary); }
+
+/* 圆角 */
+.rounded-card { border-radius: var(--radius-card); }
+.rounded-btn { border-radius: var(--radius-btn); }
+.rounded-full { border-radius: 999rpx; }
+.rounded-xl { border-radius: 48rpx; }
+
+/* 阴影 */
+.shadow-card { box-shadow: var(--shadow-card); }
+.shadow-float { box-shadow: var(--shadow-float); }
+.shadow-btn { box-shadow: var(--shadow-btn); }
+.shadow-sm { box-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.05); }
+
+/* 边框 */
+.border { border: 1rpx solid #E5E5EA; }
+.border-bottom { border-bottom: 1rpx solid rgba(198, 198, 200, 0.3); }
+
+/* 间距 */
+.p-xs { padding: var(--space-xs); }
+.p-sm { padding: var(--space-sm); }
+.p-md { padding: var(--space-md); }
+.p-lg { padding: var(--space-lg); }
+.m-xs { margin: var(--space-xs); }
+.m-sm { margin: var(--space-sm); }
+.m-md { margin: var(--space-md); }
+.m-lg { margin: var(--space-lg); }
+
+/* 宽高 */
+.w-full { width: 100%; }
+.h-full { height: 100%; }
+
+/* 定位 */
+.relative { position: relative; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+
+/* 隐藏滚动条 */
+::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+  color: transparent;
+}
+
+/* 点击反馈 */
+.active-scale {
+  transition: transform 0.2s var(--ease-out-expo);
+}
+.active-scale:active {
+  transform: scale(0.95);
+}
+
+/* 动画 */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+@keyframes fade-in-up {
+  from { 
+    opacity: 0; 
+    transform: translateY(20rpx); 
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s var(--ease-out-expo);
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s var(--ease-out-expo);
+}
+

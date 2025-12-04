@@ -1,0 +1,92 @@
+<!--pages/profile/profile.wxml-->
+<view class="profile-page">
+  
+  <!-- 顶部导航栏 -->
+  <view class="profile-header" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+    <view class="profile-header__blur"></view>
+    <view class="profile-header__content" style="height: {{navBarHeight}}px;">
+      <text class="profile-header__title">我的酒库</text>
+    </view>
+  </view>
+
+  <!-- 滚动内容 -->
+  <scroll-view 
+    class="profile-scroll" 
+    scroll-y 
+    enhanced 
+    show-scrollbar="{{false}}"
+    enable-back-to-top
+    refresher-enabled
+    bindrefresherrefresh="onPullDownRefresh"
+    style="top: {{totalNavHeight}}px;"
+  >
+    <view class="profile-content">
+      
+      <!-- 用户信息 -->
+      <view class="user-info">
+        <view class="user-avatar">
+          <image 
+            class="user-avatar__image" 
+            src="{{avatarUrl}}" 
+            mode="aspectFill"
+          />
+        </view>
+        <text class="user-name">{{userName}}</text>
+        <text class="user-title">{{userTitle}}</text>
+      </view>
+
+      <!-- 统计卡片 -->
+      <view class="stats-card">
+        <view class="stat-item">
+          <text class="stat-icon">🍷</text>
+          <text class="stat-value">{{stats.totalNotes}}</text>
+          <text class="stat-label">GLASSES</text>
+        </view>
+        
+        <view class="stat-divider"></view>
+        
+        <view class="stat-item">
+          <text class="stat-icon">💰</text>
+          <text class="stat-value">¥{{stats.totalSpent}}</text>
+          <text class="stat-label">SPENT</text>
+        </view>
+        
+        <view class="stat-divider"></view>
+        
+        <view class="stat-item">
+          <text class="stat-icon">📅</text>
+          <text class="stat-value">{{stats.daysActive}}</text>
+          <text class="stat-label">DAYS</text>
+        </view>
+      </view>
+
+      <!-- 照片墙 / 空状态 -->
+      <view wx:if="{{isEmpty}}" class="empty-gallery">
+        <text class="empty-gallery__icon">🍷</text>
+        <text class="empty-gallery__text">还没有记录哦</text>
+      </view>
+
+      <view wx:else class="photo-grid">
+        <block wx:for="{{logs}}" wx:key="id">
+          <view 
+            class="photo-item"
+            data-id="{{item.id}}"
+            bindtap="onPhotoTap"
+          >
+            <image 
+              class="photo-item__image" 
+              src="{{item.imagePath || item.imageUrl}}" 
+              mode="aspectFill"
+              lazy-load
+              binderror="onImageError"
+            />
+          </view>
+        </block>
+      </view>
+
+      <!-- 底部留白 -->
+      <view class="profile-bottom-spacer"></view>
+    </view>
+  </scroll-view>
+
+</view>

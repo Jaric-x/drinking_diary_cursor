@@ -1,0 +1,197 @@
+<!--pages/editor/editor.wxml-->
+<view class="editor-page">
+  <!-- 自定义导航栏 -->
+  <view class="editor-header" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+    <view class="editor-header__blur"></view>
+    <view class="editor-header__content" style="height: {{navBarHeight}}px;">
+      <button class="editor-header__btn editor-header__btn--left" bindtap="onCancel" hover-class="none">
+        <text class="editor-header__btn-text editor-header__btn-text--primary">
+          {{isEditing ? '返回' : '取消'}}
+        </text>
+      </button>
+      
+      <text class="editor-header__title">{{isEditing ? '编辑笔记' : '新建笔记'}}</text>
+      
+      <button wx:if="{{isEditing}}" class="editor-header__btn editor-header__btn--right" bindtap="onDelete" hover-class="none">
+        <text class="editor-header__btn-text" style="color: #FF3B30;">删除</text>
+      </button>
+    </view>
+  </view>
+
+  <!-- 滚动内容区 -->
+  <scroll-view class="editor-scroll" scroll-y enhanced show-scrollbar="{{false}}" style="top: {{totalNavHeight}}px;">
+    <view class="editor-content">
+      
+      <!-- 照片上传区 -->
+      <view class="photo-section">
+        <view class="photo-upload {{imageUrl ? 'photo-upload--hasImage' : ''}}" bindtap="chooseImage">
+          <image wx:if="{{imageUrl}}" class="photo-upload__image" src="{{imageUrl}}" mode="aspectFill" />
+          <view wx:else class="photo-upload__placeholder">
+            <text class="photo-upload__icon">📷</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 核心信息组 -->
+      <view class="form-group">
+        <view class="form-item form-item--border">
+          <view class="form-label">
+            <text class="form-icon">✏️</text>
+            <text class="form-label-text">名称</text>
+          </view>
+          <input 
+            class="form-input" 
+            type="text" 
+            value="{{name}}"
+            placeholder="请输入酒品名称"
+            placeholder-class="form-input-placeholder"
+            maxlength="50"
+            bindinput="onNameInput"
+          />
+        </view>
+
+        <view class="form-item">
+          <view class="form-label">
+            <text class="form-icon">⭐</text>
+            <text class="form-label-text">评分</text>
+          </view>
+          <view class="rating-stars">
+            <block wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
+              <text 
+                class="rating-star {{rating >= item ? 'rating-star--filled' : ''}}"
+                data-rating="{{item}}"
+                bindtap="onRatingTap"
+              >★</text>
+            </block>
+          </view>
+        </view>
+      </view>
+
+      <!-- 详细信息组 -->
+      <view class="form-group">
+        <view class="form-item form-item--border">
+          <view class="form-label">
+            <text class="form-icon">📍</text>
+            <text class="form-label-text">地点</text>
+          </view>
+          <input 
+            class="form-input" 
+            type="text" 
+            value="{{location}}"
+            placeholder="在哪里喝的？"
+            placeholder-class="form-input-placeholder"
+            maxlength="100"
+            bindinput="onLocationInput"
+          />
+        </view>
+
+        <view class="form-item">
+          <view class="form-label">
+            <text class="form-icon">💰</text>
+            <text class="form-label-text">价格</text>
+          </view>
+          <input 
+            class="form-input form-input--price" 
+            type="digit" 
+            value="{{price}}"
+            placeholder="0.00"
+            placeholder-class="form-input-placeholder"
+            bindinput="onPriceInput"
+          />
+        </view>
+      </view>
+
+      <!-- 标签组 -->
+      <view class="form-group form-group--tags">
+        <view class="form-tags-header">
+          <text class="form-icon">🏷️</text>
+          <text class="form-label-text">标签</text>
+        </view>
+
+        <view class="tags-container">
+          <!-- 预设标签 -->
+          <block wx:for="{{presetTags}}" wx:key="*this">
+            <view 
+              class="tag-chip {{selectedTags.indexOf(item) >= 0 ? 'tag-chip--selected' : ''}}"
+              data-tag="{{item}}"
+              bindtap="toggleTag"
+            >
+              <text class="tag-chip__text">{{item}}</text>
+            </view>
+          </block>
+
+          <!-- 自定义标签 -->
+          <block wx:for="{{selectedTags}}" wx:key="*this">
+            <view 
+              wx:if="{{presetTags.indexOf(item) < 0}}"
+              class="tag-chip tag-chip--custom tag-chip--selected"
+              data-tag="{{item}}"
+              bindtap="toggleTag"
+            >
+              <text class="tag-chip__text">{{item}}</text>
+              <text class="tag-chip__close">×</text>
+            </view>
+          </block>
+        </view>
+
+        <!-- 自定义标签输入 -->
+        <view class="custom-tag-section">
+          <view wx:if="{{!showCustomTagInput}}" class="custom-tag-trigger" bindtap="showCustomInput">
+            <text class="custom-tag-trigger__text">+ 自定义标签</text>
+          </view>
+          
+          <view wx:else class="custom-tag-input-box">
+            <input 
+              class="custom-tag-input" 
+              type="text" 
+              value="{{customTag}}"
+              placeholder="输入标签名称"
+              placeholder-class="form-input-placeholder"
+              maxlength="20"
+              bindinput="onCustomTagInput"
+              confirm-type="done"
+              bindconfirm="addCustomTag"
+            />
+            <button class="custom-tag-btn" bindtap="addCustomTag" hover-class="custom-tag-btn--hover">
+              添加
+            </button>
+            <button class="custom-tag-btn custom-tag-btn--cancel" bindtap="cancelCustomInput" hover-class="none">
+              取消
+            </button>
+          </view>
+        </view>
+      </view>
+
+      <!-- 描述组 -->
+      <view class="form-group form-group--notes">
+        <textarea 
+          class="form-textarea"
+          value="{{notes}}"
+          placeholder="记录你的品鉴感受、配方、口感等..."
+          placeholder-class="form-input-placeholder"
+          maxlength="1000"
+          auto-height
+          bindinput="onNotesInput"
+        />
+      </view>
+
+      <!-- 底部留白 -->
+      <view class="editor-bottom-spacer"></view>
+    </view>
+  </scroll-view>
+
+  <!-- 底部保存按钮 -->
+  <view class="editor-footer">
+    <view class="editor-footer__blur"></view>
+    <button 
+      class="save-btn {{isSubmitting ? 'save-btn--disabled' : ''}}" 
+      bindtap="onSave"
+      disabled="{{isSubmitting}}"
+      hover-class="save-btn--hover"
+      hover-start-time="0"
+      hover-stay-time="100"
+    >
+      <text class="save-btn__text">{{isEditing ? '保存修改' : '保存笔记'}}</text>
+    </button>
+  </view>
+</view>

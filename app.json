@@ -1,10 +1,29 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/editor/editor",
+    "pages/profile/profile"
   ],
   "window": {
     "navigationBarTextStyle": "black",
-    "navigationStyle": "custom"
+    "navigationStyle": "custom",
+    "backgroundColor": "#F2F2F7"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#999999",
+    "selectedColor": "#007AFF",
+    "backgroundColor": "#F2F2F7",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "个人"
+      }
+    ]
   },
   "style": "v2",
   "renderer": "skyline",

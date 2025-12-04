@@ -1,30 +1,48 @@
+<!-- custom-tab-bar/index.wxml -->
 <view class="tabbar">
   <view class="tabbar__blur"></view>
+  
   <view class="tabbar__content">
-    <block wx:for="{{tabs}}" wx:key="key">
-      <view
-        class="tabbar__item {{selected === index ? 'tabbar__item--active' : ''}}"
-        data-path="{{item.pagePath}}"
-        data-index="{{index}}"
-        bindtap="switchTab"
-        hover-class="press-scale"
-      >
-        <image class="tabbar__icon" src="{{selected === index ? item.activeIcon : item.icon}}" mode="aspectFit"></image>
+    <!-- 左侧：Home -->
+    <button 
+      class="tabbar__item {{selected === 0 ? 'tabbar__item--active' : ''}}"
+      data-path="{{tabs[0].pagePath}}"
+      data-index="0"
+      bindtap="switchTab"
+      hover-class="none"
+    >
+      <view class="tabbar__icon-wrapper">
+        <text class="tabbar__icon tabbar__icon--home">🏠</text>
       </view>
-    </block>
+    </button>
+
+    <!-- 中间：占位 -->
+    <view class="tabbar__placeholder"></view>
+
+    <!-- 右侧：Profile -->
+    <button 
+      class="tabbar__item {{selected === 1 ? 'tabbar__item--active' : ''}}"
+      data-path="{{tabs[1].pagePath}}"
+      data-index="1"
+      bindtap="switchTab"
+      hover-class="none"
+    >
+      <view class="tabbar__icon-wrapper">
+        <text class="tabbar__icon tabbar__icon--user">👤</text>
+      </view>
+    </button>
   </view>
-  <view class="tabbar__add-shell">
-    <view class="tabbar__add-base"></view>
+
+  <!-- 悬浮Add按钮 -->
+  <view class="tabbar__add-container">
     <button
       class="tabbar__add"
       bindtap="openEditor"
       hover-class="tabbar__add--hover"
       hover-start-time="0"
-      hover-stay-time="80"
+      hover-stay-time="100"
     >
-      <text class="tabbar__add-plus">＋</text>
+      <text class="tabbar__add-icon">＋</text>
     </button>
   </view>
 </view>
-
-
