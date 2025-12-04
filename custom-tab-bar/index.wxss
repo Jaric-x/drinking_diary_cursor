@@ -1,0 +1,93 @@
+.tabbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 150rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 999;
+}
+
+.tabbar__blur {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(40px);
+  box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.12);
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
+}
+
+.tabbar__content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 200rpx;
+}
+
+.tabbar__item {
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  transition: transform 0.2s;
+}
+
+.tabbar__item--active {
+  transform: translateY(-6rpx);
+}
+
+.tabbar__icon {
+  width: 72rpx;
+  height: 72rpx;
+}
+
+.tabbar__add-shell {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tabbar__add-base {
+  width: 180rpx;
+  height: 180rpx;
+  background: rgba(0, 122, 255, 0.15);
+  border-radius: 50%;
+  box-shadow: 0 -12rpx 30rpx rgba(0, 0, 0, 0.12);
+}
+
+.tabbar__add {
+  position: absolute;
+  width: 112rpx;
+  height: 112rpx;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  box-shadow: 0 20rpx 40rpx rgba(0, 122, 255, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: transform 0.15s var(--ease-out-expo);
+}
+
+.tabbar__add::after {
+  display: none;
+}
+
+.tabbar__add-plus {
+  color: #fff;
+  font-size: 72rpx;
+  line-height: 72rpx;
+  font-weight: 300;
+}
+
+.tabbar__add--hover {
+  transform: scale(0.9);
+}
+

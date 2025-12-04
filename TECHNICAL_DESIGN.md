@@ -29,17 +29,19 @@ MVP版本完全基于**本地存储**实现，无需后端服务器，重点保�
 ```css
 page {
   /* 品牌色 */
-  --color-primary: #007AFF;
-  --color-bg: #F2F2F7;       /* iOS 风格浅灰背景 */
+  --color-primary: #007AFF;   /* Brand Blue */
+  --color-bg: #F2F2F7;        /* iOS style light gray background */
   --color-card-bg: #FFFFFF;
   
   /* 文本色 */
   --text-main: rgba(0, 0, 0, 0.9);
-  --text-secondary: rgba(60, 60, 67, 0.6);
-  --text-placeholder: #C6C6C8;
+  --text-secondary: #3C3C43;  /* 60% opacity handled via opacity or hex alpha if needed */
+  --text-placeholder: #999999;
 
   /* 功能色 */
   --color-star: #FF9500;
+  --color-tag-bg: #E5E5EA;
+  --color-tag-active: #007AFF;
   --color-danger: #FF3B30;
 
   /* 圆角 & 阴影 */
@@ -50,6 +52,7 @@ page {
   
   /* 动画曲线 */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-blur: 1000ms;
 }
 ```
 
@@ -146,9 +149,11 @@ PRD 要求 "纵向切换日期，横向切换同日记录"。
         *   `vertical="false"`
         *   置于每个外层 Item 内部。
         *   每个 `swiper-item` 是一张 `diary-card`。
-        *   设置 `previous-margin="40rpx"` 和 `next-margin="40rpx"` 以实现"堆叠预览"效果，让用户看到前后有卡片。
-*   **日期书签 (Date Tag)**:
+        *   设置 `previous-margin="40rpx"` 和 `next-margin="40rpx"` 以实现"堆叠预览"效果 (Card Stack 模拟)，让用户看到前后有卡片。
+*   **日期书签 (Date Indicator)**:
     *   使用 `position: absolute; right: 0; top: 50%;` 悬浮在页面右侧。
+    *   选中态: 黑色半胶囊背景，白色文字。
+    *   非选中态: 灰色半胶囊背景，灰色小圆点。
     *   监听外层 Swiper 的 `bindchange` 事件，更新当前高亮的日期。
 
 ### 5.2 编辑页：模态体验 (Modal Style)
@@ -157,6 +162,7 @@ PRD 要求 "模态页面风格"，但作为核心功能，建议使用**独立�
     *   `navigationStyle: "custom"` (隐藏原生导航栏)。
     *   自定义 Header: 包含 "Cancel" (左) 和 "Save" (底部悬浮大按钮)。
     *   进入动画: 使用 `wx.navigateTo` 的 `routeType: 'present'` (基础库 2.29+ 支持类似 iOS 的从下往上弹出效果)，或者自行实现 CSS `transform: translateY` 动画。
+    *   表单样式: 采用 "Inset Grouped" 风格 (白色圆角卡片悬浮在灰色背景上)。
 *   **交互逻辑**:
     *   **图片上传**: 点击占位图 -> `wx.chooseMedia` -> `FileService.saveImage` -> 更新状态。
     *   **标签选择**: 预设标签 (Flex wrap 布局) + 自定义标签 (Input + Add 按钮)。
@@ -169,7 +175,8 @@ PRD 要求 "模态页面风格"，但作为核心功能，建议使用**独立�
 由于系统 TabBar 不支持高斯模糊 (Backdrop Filter) 和中间悬浮大按钮，需要使用 **Custom TabBar**。
 *   在 `app.json` 中配置 `tabBar.custom = true`。
 *   在 `custom-tab-bar/` 目录实现组件。
-*   **中间按钮**: 绝对定位，突起样式，点击 `bindtap="openEditor"` (注意：中间按钮通常是 `wx.navigateTo` 到编辑页，而不是切换 Tab)。
+*   **中间按钮**: 绝对定位，突起样式，系统蓝背景，点击 `bindtap="openEditor"`。
+*   **背景**: 高透磨砂玻璃 (Backdrop Blur XL)。
 
 ---
 
@@ -212,3 +219,14 @@ PRD 要求 "模态页面风格"，但作为核心功能，建议使用**独立�
 3.  **P0**: 首页 (核心浏览入口，双向 Swiper)。
 4.  **P1**: 个人页 (统计展示)。
 5.  **P2**: 自定义 TabBar 和 动画细节打磨。
+
+## 9. 开发任务清单 (Todo List)
+- [ ] **项目初始化**：清理默认文件，建立目录结构 (`components`, `services`, `styles` 等)。
+- [ ] **基础服务层 (Mock版)**：创建 `StorageService` 并返回模拟数据，用于驱动 UI 开发。
+- [ ] **全局样式配置**：设置 `variables.wxss` (品牌色、圆角、阴影) 和 `common.wxss`。
+- [ ] **开发首页 (Home)**：实现双向 Swiper 交互、日期指示器和卡片 UI (使用 Mock 数据)。
+- [ ] **开发编辑页 (Editor)**：实现 "Inset Grouped" 表单 UI、图片选择交互、标签逻辑和保存逻辑。
+- [ ] **开发个人页 (Profile)**：实现统计卡片和照片墙布局。
+- [ ] **自定义 TabBar**：实现高透磨砂背景和中间悬浮按钮。
+- [ ] **服务层接入真实逻辑**：实现 `FileService` 图片持久化和 `StorageService` 本地存储 (替换 Mock)。
+- [ ] **整体联调与细节打磨**：检查动画流畅度、空状态、异常处理。
