@@ -299,7 +299,8 @@
   transform: translateY(-50%);
   display: flex;
   flex-direction: column;
-  gap: 16rpx;
+  align-items: flex-end;
+  gap: 24rpx; /* 12px = 24rpx */
   z-index: 30;
   pointer-events: none;
 }
@@ -307,34 +308,39 @@
 .date-indicator {
   display: flex;
   align-items: center;
-  justify-content: center;
-  min-height: 48rpx;
-  padding: 12rpx 24rpx 12rpx 32rpx;
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(20rpx);
-  border-radius: 48rpx 0 0 48rpx;
+  justify-content: flex-end;
   transition: all 0.3s var(--ease-out-expo);
-  transform: translateX(16rpx);
 }
 
-.date-indicator--active {
-  background-color: #000000;
-  transform: translateX(0);
-  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.2);
-  padding: 12rpx 24rpx;
-}
-
-.date-indicator__text {
-  font-size: 20rpx;
-  font-weight: bold;
-  color: #FFFFFF;
-  letter-spacing: 2rpx;
-  line-height: 1;
+/* 未选中态 - 圆形小点 */
+.date-indicator:not(.date-indicator--active) {
+  width: 12rpx; /* 6px = 12rpx */
+  height: 12rpx;
+  margin-right: 8rpx; /* 距离右边缘4px = 8rpx */
 }
 
 .date-indicator__dot {
-  width: 12rpx;
+  width: 12rpx; /* 6px = 12rpx */
   height: 12rpx;
   border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2); /* 半透明黑色 */
+  transition: all 0.3s var(--ease-out-expo);
+}
+
+/* 选中态 - 胶囊标签 */
+.date-indicator--active {
+  height: 56rpx; /* 28px = 56rpx */
+  padding: 0 24rpx; /* 左右内边距各12px = 24rpx */
+  background-color: #000000;
+  border-radius: 28rpx 0 0 28rpx; /* 左侧14px全圆角 = 28rpx */
+  box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.15); /* 柔和投影 0 4px 12px */
+}
+
+.date-indicator__text {
+  font-size: 22rpx; /* 11pt ≈ 22rpx */
+  font-weight: bold;
+  color: #FFFFFF;
+  letter-spacing: 1rpx; /* 字间距微宽 */
+  line-height: 1;
+  white-space: nowrap;
 }

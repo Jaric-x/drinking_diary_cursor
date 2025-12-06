@@ -4,6 +4,14 @@
  * 12.4日2条，12.1日2条，11.19日1条
  */
 
+// 获取当前年份用于生成正确的时间戳
+const currentYear = new Date().getFullYear();
+
+// 辅助函数：生成指定月日时分的时间戳
+function createTimestamp(month, day, hour, minute) {
+  return new Date(currentYear, month - 1, day, hour, minute).getTime();
+}
+
 const MOCK_NOTES = [
   // 12月4日 - 2条记录
   {
@@ -17,8 +25,8 @@ const MOCK_NOTES = [
     notes: '完美平衡的苦味和甜味。橙皮增添了可爱的香气。',
     location: 'The Campbell',
     price: 24,
-    createTime: 1733320200000, // 2024-12-04 20:30
-    updateTime: 1733320200000
+    createTime: createTimestamp(12, 4, 20, 30),
+    updateTime: createTimestamp(12, 4, 20, 30)
   },
   {
     id: '2',
@@ -31,8 +39,8 @@ const MOCK_NOTES = [
     notes: '顺滑而精致。晚上的永恒经典。',
     location: 'Employees Only',
     price: 22,
-    createTime: 1733326500000, // 2024-12-04 22:15
-    updateTime: 1733326500000
+    createTime: createTimestamp(12, 4, 22, 15),
+    updateTime: createTimestamp(12, 4, 22, 15)
   },
   // 12月1日 - 2条记录
   {
@@ -42,12 +50,12 @@ const MOCK_NOTES = [
     timeString: '19:45',
     rating: 5,
     tags: ['辛辣', '花香'],
-    imageUrl: 'https://images.unsplash.com/photo-1629246522511-2a9452b41490?auto=format&fit=crop&w=800&q=80',
+    imageUrl: 'https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?auto=format&fit=crop&w=800&q=80',
     notes: '詹姆斯·邦德风格。清脆、强劲且极其优雅。',
     location: 'Dukes Bar',
     price: 28,
-    createTime: 1733053500000, // 2024-12-01 19:45
-    updateTime: 1733053500000
+    createTime: createTimestamp(12, 1, 19, 45),
+    updateTime: createTimestamp(12, 1, 19, 45)
   },
   {
     id: '4',
@@ -60,10 +68,10 @@ const MOCK_NOTES = [
     notes: '一个更轻盈的错误。普罗塞克增添了可爱的气泡。',
     location: 'Dante NYC',
     price: 18,
-    createTime: 1733059800000, // 2024-12-01 21:30
-    updateTime: 1733059800000
+    createTime: createTimestamp(12, 1, 21, 30),
+    updateTime: createTimestamp(12, 1, 21, 30)
   },
-  // 11月19日 - 1条记录
+  // 11月19日 - 1条记录（上个月，不计入本月记录天数）
   {
     id: '5',
     name: 'Highball',
@@ -75,8 +83,8 @@ const MOCK_NOTES = [
     notes: '简单而优雅。碳酸化确实打开了威士忌的风味。',
     location: 'Katana Kitten',
     price: 16,
-    createTime: 1732014600000, // 2024-11-19 19:10
-    updateTime: 1732014600000
+    createTime: createTimestamp(11, 19, 19, 10),
+    updateTime: createTimestamp(11, 19, 19, 10)
   }
 ];
 

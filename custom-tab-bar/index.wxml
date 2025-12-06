@@ -42,7 +42,10 @@
       hover-start-time="0"
       hover-stay-time="100"
     >
-      <text class="tabbar__add-icon">＋</text>
+      <view class="tabbar__add-icon">
+        <view class="tabbar__add-line tabbar__add-line--h"></view>
+        <view class="tabbar__add-line tabbar__add-line--v"></view>
+      </view>
     </button>
   </view>
 </view>

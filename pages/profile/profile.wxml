@@ -32,7 +32,6 @@
           />
         </view>
         <text class="user-name">{{userName}}</text>
-        <text class="user-title">{{userTitle}}</text>
       </view>
 
       <!-- 统计卡片 -->
@@ -40,7 +39,7 @@
         <view class="stat-item">
           <text class="stat-icon">🍷</text>
           <text class="stat-value">{{stats.totalNotes}}</text>
-          <text class="stat-label">GLASSES</text>
+          <text class="stat-label">总杯数</text>
         </view>
         
         <view class="stat-divider"></view>
@@ -48,7 +47,7 @@
         <view class="stat-item">
           <text class="stat-icon">💰</text>
           <text class="stat-value">¥{{stats.totalSpent}}</text>
-          <text class="stat-label">SPENT</text>
+          <text class="stat-label">总花费</text>
         </view>
         
         <view class="stat-divider"></view>
@@ -56,7 +55,7 @@
         <view class="stat-item">
           <text class="stat-icon">📅</text>
           <text class="stat-value">{{stats.daysActive}}</text>
-          <text class="stat-label">DAYS</text>
+          <text class="stat-label">记录天数</text>
         </view>
       </view>
 

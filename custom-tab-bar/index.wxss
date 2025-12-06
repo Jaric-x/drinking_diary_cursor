@@ -27,9 +27,9 @@
   position: relative;
   height: 100%;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: flex-start;
-  padding-top: 32rpx;
+  padding: 32rpx 60rpx 0;
   pointer-events: auto;
 }
 
@@ -79,9 +79,9 @@
   /* User图标样式 */
 }
 
-/* 中间占位 */
+/* 中间占位 - 为悬浮按钮留空间 */
 .tabbar__placeholder {
-  width: 160rpx;
+  width: 120rpx;
   flex-shrink: 0;
 }
 
@@ -89,23 +89,29 @@
 .tabbar__add-container {
   position: absolute;
   left: 50%;
-  top: -48rpx;
-  transform: translateX(-50%);
+  top: 0;
+  transform: translate(-50%, -50%);
   pointer-events: auto;
 }
 
 .tabbar__add {
   width: 112rpx;
   height: 112rpx;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+  min-width: 112rpx;
+  min-height: 112rpx;
+  max-width: 112rpx;
+  max-height: 112rpx;
+  border-radius: 56rpx; /* 确保是正圆 */
+  background-color: #007AFF; /* 系统蓝色 */
   box-shadow: 0 8rpx 24rpx rgba(0, 122, 255, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
   border: none;
   padding: 0;
-  transition: all 0.2s var(--ease-out-expo);
+  margin: 0;
+  box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tabbar__add::after {
@@ -117,9 +123,34 @@
   box-shadow: 0 4rpx 16rpx rgba(0, 122, 255, 0.3);
 }
 
+/* 十字加号容器 */
 .tabbar__add-icon {
-  font-size: 72rpx;
-  color: #FFFFFF;
-  font-weight: 300;
-  line-height: 1;
+  position: relative;
+  width: 40rpx;
+  height: 40rpx;
+}
+
+/* 十字线条 */
+.tabbar__add-line {
+  position: absolute;
+  background-color: #FFFFFF;
+  border-radius: 3rpx;
+}
+
+/* 横线 */
+.tabbar__add-line--h {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 6rpx;
+  transform: translateY(-50%);
+}
+
+/* 竖线 */
+.tabbar__add-line--v {
+  top: 0;
+  left: 50%;
+  width: 6rpx;
+  height: 100%;
+  transform: translateX(-50%);
 }

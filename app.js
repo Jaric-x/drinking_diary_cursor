@@ -8,7 +8,7 @@ App({
     // 全局数据标记
     needRefresh: false,
     // Mock数据版本（修改测试数据时更新此值）
-    mockDataVersion: 'v2_20241204'
+    mockDataVersion: 'v5_dynamic_year'
   },
 
   onLaunch() {

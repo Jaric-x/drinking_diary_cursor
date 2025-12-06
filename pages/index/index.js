@@ -3,6 +3,9 @@ const app = getApp();
 const storageService = require('../../services/storage.js');
 const util = require('../../services/util.js');
 
+// 浏览状态存储键
+const VIEW_STATE_KEY = 'home_view_state';
+
 Page({
   data: {
     // 导航栏高度
@@ -24,7 +27,10 @@ Page({
     backgroundImage: '',
     
     // 空状态
-    isEmpty: false
+    isEmpty: false,
+    
+    // 是否首次加载
+    isFirstLoad: true
   },
 
   onLoad() {
@@ -35,30 +41,84 @@ Page({
       totalNavHeight: app.globalData.totalNavHeight
     });
     
-    this.loadData();
-    
     // 设置问候语
     this.setData({
       greeting: util.getGreeting()
     });
+    
+    // 首次加载数据，尝试恢复浏览状态
+    this.loadData(true);
   },
 
   onShow() {
-    // 每次显示时刷新数据（从编辑页返回时）
-    this.loadData();
-    
     // 更新TabBar选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 0
       });
     }
+    
+    // 非首次显示时，尝试恢复浏览状态
+    if (!this.data.isFirstLoad) {
+      this.loadData(true);
+    } else {
+      this.setData({ isFirstLoad: false });
+    }
+  },
+
+  onHide() {
+    // 页面隐藏时保存浏览状态
+    this.saveViewState();
+  },
+
+  onUnload() {
+    // 页面卸载时保存浏览状态
+    this.saveViewState();
+  },
+
+  /**
+   * 保存浏览状态
+   */
+  saveViewState() {
+    const { activeGroupIndex, activeLogIndices, groupedLogs } = this.data;
+    
+    if (groupedLogs.length === 0) return;
+    
+    try {
+      wx.setStorageSync(VIEW_STATE_KEY, {
+        activeGroupIndex,
+        activeLogIndices,
+        timestamp: Date.now()
+      });
+    } catch (err) {
+      console.error('[Home] 保存浏览状态失败:', err);
+    }
+  },
+
+  /**
+   * 恢复浏览状态
+   */
+  restoreViewState() {
+    try {
+      const state = wx.getStorageSync(VIEW_STATE_KEY);
+      if (state) {
+        // 检查状态是否过期（超过30分钟）
+        const isExpired = Date.now() - state.timestamp > 30 * 60 * 1000;
+        if (!isExpired) {
+          return state;
+        }
+      }
+    } catch (err) {
+      console.error('[Home] 恢复浏览状态失败:', err);
+    }
+    return null;
   },
 
   /**
    * 加载并分组记录数据
+   * @param {boolean} restorePosition - 是否恢复上次浏览位置
    */
-  loadData() {
+  loadData(restorePosition = false) {
     const logs = storageService.getLogs();
     
     if (logs.length === 0) {
@@ -95,21 +155,46 @@ Page({
       }));
     
     // 初始化每组的活动索引
-    const activeLogIndices = {};
+    let activeLogIndices = {};
     groupedLogs.forEach((group, index) => {
       activeLogIndices[index] = 0;
     });
     
-    // 设置背景图片为第一张卡片
-    const firstLog = groupedLogs[0]?.logs[0];
-    const backgroundImage = firstLog ? (firstLog.imagePath || firstLog.imageUrl) : '';
+    let activeGroupIndex = 0;
+    
+    // 尝试恢复浏览状态
+    if (restorePosition) {
+      const savedState = this.restoreViewState();
+      if (savedState) {
+        // 验证保存的索引是否有效
+        if (savedState.activeGroupIndex < groupedLogs.length) {
+          activeGroupIndex = savedState.activeGroupIndex;
+        }
+        // 恢复每组的卡片索引
+        Object.keys(savedState.activeLogIndices || {}).forEach(key => {
+          const idx = parseInt(key);
+          if (idx < groupedLogs.length) {
+            const cardIdx = savedState.activeLogIndices[key];
+            if (cardIdx < groupedLogs[idx].logs.length) {
+              activeLogIndices[idx] = cardIdx;
+            }
+          }
+        });
+      }
+    }
+    
+    // 获取当前卡片作为背景
+    const currentGroup = groupedLogs[activeGroupIndex];
+    const currentLogIdx = activeLogIndices[activeGroupIndex] || 0;
+    const currentLog = currentGroup?.logs[currentLogIdx];
+    const backgroundImage = currentLog ? (currentLog.imagePath || currentLog.imageUrl) : '';
     
     this.setData({
       isEmpty: false,
       groupedLogs,
       activeLogIndices,
       backgroundImage,
-      activeGroupIndex: 0
+      activeGroupIndex
     });
   },
 
@@ -169,6 +254,9 @@ Page({
    */
   onCardTap(e) {
     const { id } = e.currentTarget.dataset;
+    // 先保存当前状态
+    this.saveViewState();
+    
     wx.navigateTo({
       url: `/pages/editor/editor?id=${id}`,
       fail: (err) => {
@@ -182,6 +270,9 @@ Page({
    * 点击添加按钮
    */
   onAddTap() {
+    // 先保存当前状态
+    this.saveViewState();
+    
     wx.navigateTo({
       url: '/pages/editor/editor',
       fail: (err) => {
@@ -195,7 +286,7 @@ Page({
    * 下拉刷新
    */
   onPullDownRefresh() {
-    this.loadData();
+    this.loadData(true);
     wx.stopPullDownRefresh();
   },
 

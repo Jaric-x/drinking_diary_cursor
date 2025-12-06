@@ -11,8 +11,7 @@ Page({
     totalNavHeight: 64,
     
     // 用户信息
-    userName: 'Alex',
-    userTitle: 'Sommelier in training',
+    userName: '杰瑞克',
     avatarUrl: 'https://picsum.photos/200/200',
     
     // 统计数据
