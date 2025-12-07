@@ -33,9 +33,31 @@
 .editor-header__content {
   position: relative;
   display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 32rpx;
+}
+
+/* 三列布局：左-中-右 */
+.editor-header__left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.editor-header__center {
+  flex: 2;
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 32rpx;
+}
+
+.editor-header__right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
 
 .editor-header__title {
@@ -44,37 +66,13 @@
   color: var(--text-main);
 }
 
-.editor-header__btn {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 16rpx;
-  background: transparent;
-  border: none;
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
-}
-
-.editor-header__btn::after {
-  border: none;
-}
-
-.editor-header__btn--left {
-  left: 16rpx;
-}
-
-.editor-header__btn--right {
-  right: 16rpx;
-}
-
 .editor-header__btn-text {
-  font-size: 32rpx;
+  font-size: 34rpx;
   color: var(--text-main);
 }
 
 .editor-header__btn-text--primary {
-  color: var(--color-primary);
+  color: #007AFF;
 }
 
 .editor-header__icon {
@@ -111,7 +109,7 @@
   border-radius: 48rpx;
   background-color: #FFFFFF;
   box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
-  overflow: hidden;
+  overflow: visible;
   position: relative;
 }
 
@@ -119,18 +117,45 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 24rpx;
+  box-sizing: border-box;
 }
 
-.photo-upload__icon {
-  font-size: 80rpx;
-  opacity: 0.3;
+.photo-upload__text {
+  font-size: 26rpx;
+  color: #999999;
+  text-align: center;
+  line-height: 1.4;
 }
 
 .photo-upload__image {
   width: 100%;
   height: 100%;
+  border-radius: 48rpx;
+}
+
+/* 修改按钮 - 右下角悬浮圆形黑色按钮，圆心与照片右下角重合 */
+.photo-upload__edit-btn {
+  position: absolute;
+  right: -15rpx;
+  bottom: -15rpx;
+  width: 56rpx;
+  height: 56rpx;
+  background-color: rgba(0, 0, 0, 1);
+  border-radius: 50%;
+  border: 4rpx solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.2);
+}
+
+.photo-upload__edit-icon {
+  font-size: 28rpx;
+  color: #FFFFFF;
 }
 
 /* 表单组 */
@@ -188,9 +213,24 @@
   color: var(--text-placeholder);
 }
 
-.form-input--price::before {
-  content: '¥';
-  color: var(--text-secondary);
+/* 价格输入框容器 */
+.price-input-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.price-prefix {
+  font-size: 34rpx;
+  color: var(--text-main);
+  margin-right: 4rpx;
+}
+
+.form-input--price {
+  flex: none;
+  width: 180rpx;
+  text-align: right;
 }
 
 /* 评分星星 */
@@ -208,7 +248,7 @@
 }
 
 .rating-star--filled {
-  color: var(--color-star);
+  color: #FF9500;
 }
 
 /* 标签相关 */
@@ -227,9 +267,9 @@
 
 .tag-chip {
   padding: 12rpx 32rpx;
-  background-color: var(--color-tag-bg);
+  background-color: #E5E5EA;
   color: rgba(0, 0, 0, 0.7);
-  border-radius: var(--radius-tag);
+  border-radius: 100rpx;
   font-size: 30rpx;
   font-weight: 500;
   transition: all 0.2s ease;
@@ -239,17 +279,22 @@
 }
 
 .tag-chip--selected {
-  background-color: var(--color-primary);
+  background-color: #007AFF !important;
+  color: #FFFFFF !important;
+}
+
+.tag-chip--selected .tag-chip__text {
   color: #FFFFFF;
 }
 
 .tag-chip__text {
   line-height: 1;
+  color: inherit;
 }
 
 .tag-chip__close {
   font-size: 36rpx;
-  opacity: 0.5;
+  opacity: 0.7;
   line-height: 1;
 }
 
@@ -262,8 +307,8 @@
 .custom-tag-trigger {
   display: inline-flex;
   padding: 12rpx 32rpx;
-  background-color: var(--color-tag-bg);
-  border-radius: var(--radius-tag);
+  background-color: #E5E5EA;
+  border-radius: 100rpx;
 }
 
 .custom-tag-trigger__text {
@@ -273,40 +318,39 @@
 
 .custom-tag-input-box {
   display: flex;
-  gap: 16rpx;
+  gap: 20rpx;
   align-items: center;
 }
 
-.custom-tag-input {
-  flex: 1;
-  padding: 16rpx 24rpx;
-  background-color: var(--color-bg);
-  border-radius: 16rpx;
+/* 胶囊样式的输入框 */
+.custom-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 12rpx 32rpx;
+  background-color: #E5E5EA;
+  border-radius: 100rpx;
+}
+
+.custom-tag-chip__input {
+  font-size: 30rpx;
+  color: rgba(0, 0, 0, 0.7);
+  width: 200rpx;
+}
+
+.custom-tag-placeholder {
+  color: #999999;
+}
+
+/* 添加/取消文字按钮 */
+.custom-tag-action {
   font-size: 28rpx;
+  color: #007AFF;
+  font-weight: 500;
+  padding: 8rpx;
 }
 
-.custom-tag-btn {
-  padding: 16rpx 32rpx;
-  background-color: var(--color-primary);
-  color: #FFFFFF;
-  border-radius: 16rpx;
-  font-size: 28rpx;
-  font-weight: 600;
-  border: none;
-  line-height: 1;
-}
-
-.custom-tag-btn::after {
-  border: none;
-}
-
-.custom-tag-btn--hover {
-  opacity: 0.8;
-}
-
-.custom-tag-btn--cancel {
-  background-color: transparent;
-  color: var(--text-secondary);
+.custom-tag-action--cancel {
+  color: #999999;
 }
 
 /* 文本域 */
@@ -318,7 +362,7 @@
   line-height: 1.6;
 }
 
-/* 底部保存按钮 */
+/* 底部操作栏 */
 .editor-footer {
   position: fixed;
   left: 0;
@@ -338,35 +382,57 @@
   backdrop-filter: blur(40rpx);
 }
 
-.save-btn {
+.editor-footer__buttons {
   position: relative;
-  width: 100%;
+  display: flex;
+  gap: 24rpx;
+}
+
+/* 操作按钮通用样式 */
+.action-btn {
+  flex: 1;
   height: 100rpx;
-  background-color: var(--color-primary);
-  color: #FFFFFF;
   border-radius: 28rpx;
   font-size: 34rpx;
   font-weight: 600;
-  box-shadow: 0 16rpx 40rpx rgba(0, 122, 255, 0.2);
   border: none;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.save-btn::after {
+.action-btn::after {
   border: none;
 }
 
-.save-btn--hover {
+.action-btn--hover {
   transform: scale(0.98);
   opacity: 0.9;
 }
 
-.save-btn--disabled {
+.action-btn--disabled {
   opacity: 0.5;
 }
 
-.save-btn__text {
+/* 保存按钮 */
+.action-btn--save {
+  background-color: #007AFF;
+  color: #FFFFFF;
+  box-shadow: 0 16rpx 40rpx rgba(0, 122, 255, 0.2);
+}
+
+.action-btn--full {
+  flex: none;
+  width: 100%;
+}
+
+/* 删除按钮 */
+.action-btn--delete {
+  background-color: #FFFFFF;
+  color: #FF3B30;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+.action-btn__text {
   line-height: 1;
 }

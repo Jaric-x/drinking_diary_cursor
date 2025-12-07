@@ -158,7 +158,7 @@ Page({
    */
   toggleTag(e) {
     const tag = e.currentTarget.dataset.tag;
-    const { selectedTags } = this.data;
+    let selectedTags = [...this.data.selectedTags]; // 创建新数组
     
     const index = selectedTags.indexOf(tag);
     if (index >= 0) {
@@ -181,6 +181,7 @@ Page({
    * 输入自定义标签
    */
   onCustomTagInput(e) {
+    // maxlength 属性已经限制了输入长度，这里直接使用即可
     this.setData({ customTag: e.detail.value });
   },
 
@@ -188,26 +189,22 @@ Page({
    * 添加自定义标签
    */
   addCustomTag() {
-    const { customTag, selectedTags } = this.data;
+    const { customTag } = this.data;
+    const trimmedTag = customTag.trim();
     
-    if (!customTag || customTag.trim() === '') {
+    if (!trimmedTag) {
       wx.showToast({ title: '请输入标签名称', icon: 'none' });
       return;
     }
     
-    // 检查长度限制
-    if (customTag.length > 20) {
-      wx.showToast({ title: '标签名称过长', icon: 'none' });
-      return;
-    }
-    
     // 检查是否已存在
-    if (selectedTags.includes(customTag)) {
+    const selectedTags = [...this.data.selectedTags];
+    if (selectedTags.indexOf(trimmedTag) >= 0) {
       wx.showToast({ title: '标签已存在', icon: 'none' });
       return;
     }
     
-    selectedTags.push(customTag);
+    selectedTags.push(trimmedTag);
     
     this.setData({
       selectedTags,
@@ -216,7 +213,7 @@ Page({
     });
     
     // 保存到用户标签库
-    storageService.addUserTag(customTag);
+    storageService.addUserTag(trimmedTag);
   },
 
   /**

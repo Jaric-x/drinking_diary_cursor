@@ -1,0 +1,23 @@
+// 判断标签是否被选中
+function isSelected(selectedTags, tag) {
+  if (!selectedTags || !selectedTags.length) return false;
+  for (var i = 0; i < selectedTags.length; i++) {
+    if (selectedTags[i] === tag) return true;
+  }
+  return false;
+}
+
+// 判断是否为预设标签
+function isPresetTag(presetTags, tag) {
+  if (!presetTags || !presetTags.length) return false;
+  for (var i = 0; i < presetTags.length; i++) {
+    if (presetTags[i] === tag) return true;
+  }
+  return false;
+}
+
+module.exports = {
+  isSelected: isSelected,
+  isPresetTag: isPresetTag
+};
+

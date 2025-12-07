@@ -1,20 +1,22 @@
 <!--pages/editor/editor.wxml-->
+<wxs src="./editor.wxs" module="utils" />
 <view class="editor-page">
   <!-- 自定义导航栏 -->
   <view class="editor-header" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
     <view class="editor-header__blur"></view>
     <view class="editor-header__content" style="height: {{navBarHeight}}px;">
-      <button class="editor-header__btn editor-header__btn--left" bindtap="onCancel" hover-class="none">
-        <text class="editor-header__btn-text editor-header__btn-text--primary">
-          {{isEditing ? '返回' : '取消'}}
-        </text>
-      </button>
+      <!-- 左侧按钮 -->
+      <view class="editor-header__left" bindtap="onCancel">
+        <text class="editor-header__btn-text editor-header__btn-text--primary">{{isEditing ? '返回' : '取消'}}</text>
+      </view>
       
-      <text class="editor-header__title">{{isEditing ? '编辑笔记' : '新建笔记'}}</text>
+      <!-- 中间标题 -->
+      <view class="editor-header__center">
+        <text class="editor-header__title">{{isEditing ? '编辑笔记' : '新建笔记'}}</text>
+      </view>
       
-      <button wx:if="{{isEditing}}" class="editor-header__btn editor-header__btn--right" bindtap="onDelete" hover-class="none">
-        <text class="editor-header__btn-text" style="color: #FF3B30;">删除</text>
-      </button>
+      <!-- 右侧占位 -->
+      <view class="editor-header__right"></view>
     </view>
   </view>
 
@@ -27,7 +29,11 @@
         <view class="photo-upload {{imageUrl ? 'photo-upload--hasImage' : ''}}" bindtap="chooseImage">
           <image wx:if="{{imageUrl}}" class="photo-upload__image" src="{{imageUrl}}" mode="aspectFill" />
           <view wx:else class="photo-upload__placeholder">
-            <text class="photo-upload__icon">📷</text>
+            <text class="photo-upload__text">请拍摄/上传照片</text>
+          </view>
+          <!-- 修改按钮 - 仅在有图片时显示 -->
+          <view wx:if="{{imageUrl}}" class="photo-upload__edit-btn">
+            <text class="photo-upload__edit-icon">✎</text>
           </view>
         </view>
       </view>
@@ -90,14 +96,18 @@
             <text class="form-icon">💰</text>
             <text class="form-label-text">价格</text>
           </view>
-          <input 
-            class="form-input form-input--price" 
-            type="digit" 
-            value="{{price}}"
-            placeholder="0.00"
-            placeholder-class="form-input-placeholder"
-            bindinput="onPriceInput"
-          />
+          <view class="price-input-wrapper">
+            <text class="price-prefix">¥</text>
+            <input 
+              class="form-input form-input--price" 
+              type="digit" 
+              value="{{price}}"
+              placeholder="0.00"
+              placeholder-class="form-input-placeholder"
+              maxlength="8"
+              bindinput="onPriceInput"
+            />
+          </view>
         </view>
       </view>
 
@@ -112,7 +122,7 @@
           <!-- 预设标签 -->
           <block wx:for="{{presetTags}}" wx:key="*this">
             <view 
-              class="tag-chip {{selectedTags.indexOf(item) >= 0 ? 'tag-chip--selected' : ''}}"
+              class="tag-chip {{utils.isSelected(selectedTags, item) ? 'tag-chip--selected' : ''}}"
               data-tag="{{item}}"
               bindtap="toggleTag"
             >
@@ -123,7 +133,7 @@
           <!-- 自定义标签 -->
           <block wx:for="{{selectedTags}}" wx:key="*this">
             <view 
-              wx:if="{{presetTags.indexOf(item) < 0}}"
+              wx:if="{{!utils.isPresetTag(presetTags, item)}}"
               class="tag-chip tag-chip--custom tag-chip--selected"
               data-tag="{{item}}"
               bindtap="toggleTag"
@@ -141,23 +151,22 @@
           </view>
           
           <view wx:else class="custom-tag-input-box">
-            <input 
-              class="custom-tag-input" 
-              type="text" 
-              value="{{customTag}}"
-              placeholder="输入标签名称"
-              placeholder-class="form-input-placeholder"
-              maxlength="20"
-              bindinput="onCustomTagInput"
-              confirm-type="done"
-              bindconfirm="addCustomTag"
-            />
-            <button class="custom-tag-btn" bindtap="addCustomTag" hover-class="custom-tag-btn--hover">
-              添加
-            </button>
-            <button class="custom-tag-btn custom-tag-btn--cancel" bindtap="cancelCustomInput" hover-class="none">
-              取消
-            </button>
+            <view class="custom-tag-chip">
+              <input 
+                class="custom-tag-chip__input" 
+                type="text" 
+                value="{{customTag}}"
+                placeholder="最多5个字"
+                placeholder-class="custom-tag-placeholder"
+                maxlength="6"
+                bindinput="onCustomTagInput"
+                confirm-type="done"
+                bindconfirm="addCustomTag"
+                focus="{{true}}"
+              />
+            </view>
+            <text class="custom-tag-action" bindtap="addCustomTag">添加</text>
+            <text class="custom-tag-action custom-tag-action--cancel" bindtap="cancelCustomInput">取消</text>
           </view>
         </view>
       </view>
@@ -180,18 +189,33 @@
     </view>
   </scroll-view>
 
-  <!-- 底部保存按钮 -->
+  <!-- 底部操作按钮 -->
   <view class="editor-footer">
     <view class="editor-footer__blur"></view>
-    <button 
-      class="save-btn {{isSubmitting ? 'save-btn--disabled' : ''}}" 
-      bindtap="onSave"
-      disabled="{{isSubmitting}}"
-      hover-class="save-btn--hover"
-      hover-start-time="0"
-      hover-stay-time="100"
-    >
-      <text class="save-btn__text">{{isEditing ? '保存修改' : '保存笔记'}}</text>
-    </button>
+    <view class="editor-footer__buttons">
+      <!-- 删除按钮 - 仅编辑模式显示 -->
+      <button 
+        wx:if="{{isEditing}}"
+        class="action-btn action-btn--delete" 
+        bindtap="onDelete"
+        hover-class="action-btn--hover"
+        hover-start-time="0"
+        hover-stay-time="100"
+      >
+        <text class="action-btn__text">删除</text>
+      </button>
+      
+      <!-- 保存按钮 -->
+      <button 
+        class="action-btn action-btn--save {{isSubmitting ? 'action-btn--disabled' : ''}} {{isEditing ? '' : 'action-btn--full'}}" 
+        bindtap="onSave"
+        disabled="{{isSubmitting}}"
+        hover-class="action-btn--hover"
+        hover-start-time="0"
+        hover-stay-time="100"
+      >
+        <text class="action-btn__text">{{isEditing ? '保存修改' : '保存笔记'}}</text>
+      </button>
+    </view>
   </view>
 </view>
