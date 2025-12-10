@@ -100,11 +100,11 @@
 
                     <view class="card-footer">
                       <view class="card-tags">
-                        <block wx:for="{{log.tags}}" wx:key="*this">
+                        <block wx:for="{{log.tags}}" wx:key="*this" wx:if="{{index < 3}}">
                           <text class="card-tag">{{item}}</text>
                         </block>
                       </view>
-                      <text class="card-time">{{log.timeString}}</text>
+                      <text class="card-time">{{log.displayTime}}</text>
                     </view>
                   </view>
                 </view>
@@ -121,7 +121,7 @@
     <view class="date-indicators">
       <block wx:for="{{groupedLogs}}" wx:key="date" wx:for-index="idx">
         <view class="date-indicator {{activeGroupIndex === idx ? 'date-indicator--active' : ''}}">
-          <text wx:if="{{activeGroupIndex === idx}}" class="date-indicator__text">{{item.date}}</text>
+          <text wx:if="{{activeGroupIndex === idx}}" class="date-indicator__text">{{item.displayDate}}</text>
           <view wx:else class="date-indicator__dot"></view>
         </view>
       </block>

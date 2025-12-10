@@ -129,10 +129,17 @@ Page({
       return;
     }
     
-    // 按日期分组
+    // 为每条记录生成基于createTime的显示时间（确保始终使用创建时间而不是更新时间）
+    const processedLogs = logs.map(log => ({
+      ...log,
+      displayDate: util.formatDate(log.createTime),
+      displayTime: util.formatTime(log.createTime)
+    }));
+    
+    // 按日期分组（使用基于createTime的displayDate）
     const groupMap = {};
-    logs.forEach(log => {
-      const date = log.dateString;
+    processedLogs.forEach(log => {
+      const date = log.displayDate;
       if (!groupMap[date]) {
         groupMap[date] = [];
       }
@@ -151,6 +158,7 @@ Page({
       })
       .map(date => ({
         date,
+        displayDate: date,
         logs: groupMap[date]
       }));
     

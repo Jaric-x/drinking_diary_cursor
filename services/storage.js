@@ -52,8 +52,12 @@ function saveLog(log) {
       const existingIndex = logs.findIndex(item => item.id === log.id);
       
       if (existingIndex >= 0) {
-        // 更新现有记录
+        // 更新现有记录 - 保留原记录的创建时间信息
+        const oldLog = logs[existingIndex];
+        log.createTime = oldLog.createTime; // 保留创建时间
         log.updateTime = now;
+        log.dateString = oldLog.dateString; // 保留创建日期字符串（兼容旧逻辑）
+        log.timeString = oldLog.timeString; // 保留创建时间字符串（兼容旧逻辑）
         logs[existingIndex] = log;
         console.log('[StorageService] 更新记录:', log.id);
       } else {
