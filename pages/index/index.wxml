@@ -41,7 +41,7 @@
     <text class="empty-state__hint">点击下方 + 开始记录第一杯酒</text>
   </view>
 
-  <!-- 双向Swiper卡片流 -->
+  <!-- 卡片流（垂直Swiper + 水平堆叠） -->
   <view wx:else class="card-flow" style="top: {{totalNavHeight + 60}}px;">
     <!-- 外层垂直Swiper（日期分组） -->
     <swiper 
@@ -55,25 +55,24 @@
       <block wx:for="{{groupedLogs}}" wx:key="date" wx:for-item="group" wx:for-index="groupIndex">
         <swiper-item class="vertical-item">
           
-          <!-- 内层水平Swiper（同日期多条记录） -->
-          <swiper 
-            class="horizontal-swiper"
-            current="{{activeLogIndices[groupIndex] || 0}}"
+          <!-- 卡片堆叠容器（水平手势控制） -->
+          <view 
+            class="card-stack-container"
             data-group-index="{{groupIndex}}"
-            bindchange="onHorizontalChange"
-            previous-margin="{{group.logs.length > 1 ? '80rpx' : '0'}}"
-            next-margin="{{group.logs.length > 1 ? '80rpx' : '0'}}"
-            duration="300"
+            bindtouchstart="onTouchStart"
+            bindtouchmove="onTouchMove"
+            bindtouchend="onTouchEnd"
+            catch:tap="preventBubble"
           >
-            <block wx:for="{{group.logs}}" wx:key="id" wx:for-item="log">
-              <swiper-item class="horizontal-item">
-                
+            <block wx:for="{{group.logs}}" wx:key="id" wx:for-item="log" wx:for-index="logIndex">
+              <view 
+                class="diary-card-wrapper diary-card-wrapper--offset-{{logIndex - (activeLogIndices[groupIndex] || 0)}}"
+                data-id="{{log.id}}"
+                data-offset="{{logIndex - (activeLogIndices[groupIndex] || 0)}}"
+                bindtap="onCardTap"
+              >
                 <!-- 卡片 -->
-                <view 
-                  class="diary-card"
-                  data-id="{{log.id}}"
-                  bindtap="onCardTap"
-                >
+                <view class="diary-card">
                   <!-- 图片区域 -->
                   <view class="card-image">
                     <image 
@@ -108,10 +107,9 @@
                     </view>
                   </view>
                 </view>
-                
-              </swiper-item>
+              </view>
             </block>
-          </swiper>
+          </view>
           
         </swiper-item>
       </block>

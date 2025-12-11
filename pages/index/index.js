@@ -30,7 +30,11 @@ Page({
     isEmpty: false,
     
     // 是否首次加载
-    isFirstLoad: true
+    isFirstLoad: true,
+    
+    // 手势相关
+    touchStartX: 0,
+    isDragging: false
   },
 
   onLoad() {
@@ -220,23 +224,6 @@ Page({
   },
 
   /**
-   * 水平Swiper切换（切换同日期内的卡片）
-   */
-  onHorizontalChange(e) {
-    const groupIndex = parseInt(e.currentTarget.dataset.groupIndex);
-    const current = e.detail.current;
-    
-    this.setData({
-      [`activeLogIndices.${groupIndex}`]: current
-    });
-    
-    // 如果是当前活动的组，更新背景
-    if (groupIndex === this.data.activeGroupIndex) {
-      this.updateBackground();
-    }
-  },
-
-  /**
    * 更新背景图片
    */
   updateBackground() {
@@ -258,10 +245,82 @@ Page({
   },
 
   /**
+   * 手势开始
+   */
+  onTouchStart(e) {
+    this.setData({
+      touchStartX: e.touches[0].clientX,
+      isDragging: false
+    });
+  },
+
+  /**
+   * 手势移动
+   */
+  onTouchMove(e) {
+    if (this.data.touchStartX !== 0) {
+      const distance = Math.abs(e.touches[0].clientX - this.data.touchStartX);
+      if (distance > 10 && !this.data.isDragging) {
+        this.setData({ isDragging: true });
+      }
+    }
+  },
+
+  /**
+   * 手势结束
+   */
+  onTouchEnd(e) {
+    const { touchStartX, isDragging, activeGroupIndex, activeLogIndices, groupedLogs } = this.data;
+    
+    if (touchStartX === 0) return;
+    
+    const touchEndX = e.changedTouches[0].clientX;
+    const distance = touchStartX - touchEndX;
+    const minSwipeDistance = 50;
+    
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+    
+    const groupIndex = parseInt(e.currentTarget.dataset.groupIndex);
+    const currentGroup = groupedLogs[groupIndex];
+    const maxIndex = currentGroup.logs.length - 1;
+    const currentIndex = activeLogIndices[groupIndex] || 0;
+    
+    if (isLeftSwipe && currentIndex < maxIndex) {
+      // 向左滑，查看下一张
+      this.setData({
+        [`activeLogIndices.${groupIndex}`]: currentIndex + 1
+      });
+      this.updateBackground();
+    } else if (isRightSwipe && currentIndex > 0) {
+      // 向右滑，查看上一张
+      this.setData({
+        [`activeLogIndices.${groupIndex}`]: currentIndex - 1
+      });
+      this.updateBackground();
+    }
+    
+    // 重置状态
+    setTimeout(() => {
+      this.setData({
+        touchStartX: 0,
+        isDragging: false
+      });
+    }, 100);
+  },
+
+  /**
    * 点击卡片，进入编辑页
    */
   onCardTap(e) {
-    const { id } = e.currentTarget.dataset;
+    // 如果正在拖动，不响应点击
+    if (this.data.isDragging) return;
+    
+    const { id, offset } = e.currentTarget.dataset;
+    
+    // 只有当前卡片(offset === 0)才能点击进入编辑页
+    if (offset !== 0) return;
+    
     // 先保存当前状态
     this.saveViewState();
     
@@ -304,5 +363,12 @@ Page({
   onImageError(e) {
     console.warn('[Home] 图片加载失败:', e.detail);
     // 可以设置默认占位图
+  },
+
+  /**
+   * 防止事件冒泡
+   */
+  preventBubble() {
+    // 空函数，用于阻止事件冒泡
   }
 });
