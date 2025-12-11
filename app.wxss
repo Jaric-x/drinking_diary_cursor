@@ -1,6 +1,7 @@
 /* 引入全局样式 */
 @import "styles/variables.wxss";
 @import "styles/common.wxss";
+@import "static/iconfont/iconfont.wxss";
 
 /* 全局重置 */
 page {

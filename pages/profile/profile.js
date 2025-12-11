@@ -9,6 +9,13 @@ Page({
     statusBarHeight: 20,
     navBarHeight: 44,
     totalNavHeight: 64,
+
+    // 图标字符
+    icons: {
+      guozhi: String.fromCodePoint(0x10209),  // 果汁 (使用 fromCodePoint)
+      qianbao: String.fromCodePoint(0x1020b), // 钱包 (使用 fromCodePoint)
+      riqi: String.fromCodePoint(0x1020d)     // 日期 (使用 fromCodePoint)
+    },
     
     // 用户信息
     userName: '杰瑞克',

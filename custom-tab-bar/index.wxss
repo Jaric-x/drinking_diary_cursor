@@ -1,4 +1,6 @@
 /* custom-tab-bar/index.wxss */
+@import "../static/iconfont/iconfont.wxss";
+
 .tabbar {
   position: fixed;
   bottom: 0;

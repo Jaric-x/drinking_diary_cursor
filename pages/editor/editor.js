@@ -11,6 +11,15 @@ Page({
     statusBarHeight: 20,
     navBarHeight: 44,
     totalNavHeight: 64,
+
+    // 图标字符
+    icons: {
+      qianbi: String.fromCharCode(0xe6da),   // 铅笔
+      dianzan: String.fromCharCode(0xe6d7),  // 点赞
+      dingwei: String.fromCharCode(0xe6d9),  // 定位
+      kaquan: String.fromCharCode(0xe6d8),   // 卡券
+      kanjia: String.fromCharCode(0xe6db)    // 砍价（标签）
+    },
     
     // 页面模式
     isEditing: false,

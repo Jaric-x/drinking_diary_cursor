@@ -40,11 +40,11 @@
 
       <!-- 核心信息组 -->
       <view class="form-group">
-        <view class="form-item form-item--border">
-          <view class="form-label">
-            <text class="form-icon">✏️</text>
-            <text class="form-label-text">名称</text>
-          </view>
+         <view class="form-item form-item--border">
+           <view class="form-label">
+             <text class="iconfont form-icon">{{icons.qianbi}}</text>
+             <text class="form-label-text">名称</text>
+           </view>
           <input 
             class="form-input" 
             type="text" 
@@ -56,11 +56,11 @@
           />
         </view>
 
-        <view class="form-item">
-          <view class="form-label">
-            <text class="form-icon">⭐</text>
-            <text class="form-label-text">评分</text>
-          </view>
+         <view class="form-item">
+           <view class="form-label">
+             <text class="iconfont form-icon">{{icons.dianzan}}</text>
+             <text class="form-label-text">评分</text>
+           </view>
           <view class="rating-stars">
             <block wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
               <text 
@@ -75,11 +75,11 @@
 
       <!-- 详细信息组 -->
       <view class="form-group">
-        <view class="form-item form-item--border">
-          <view class="form-label">
-            <text class="form-icon">📍</text>
-            <text class="form-label-text">地点</text>
-          </view>
+         <view class="form-item form-item--border">
+           <view class="form-label">
+             <text class="iconfont form-icon">{{icons.dingwei}}</text>
+             <text class="form-label-text">地点</text>
+           </view>
           <input 
             class="form-input" 
             type="text" 
@@ -91,11 +91,11 @@
           />
         </view>
 
-        <view class="form-item">
-          <view class="form-label">
-            <text class="form-icon">💰</text>
-            <text class="form-label-text">价格</text>
-          </view>
+         <view class="form-item">
+           <view class="form-label">
+             <text class="iconfont form-icon">{{icons.kaquan}}</text>
+             <text class="form-label-text">价格</text>
+           </view>
           <view class="price-input-wrapper">
             <text class="price-prefix">¥</text>
             <input 
@@ -112,11 +112,11 @@
       </view>
 
       <!-- 标签组 -->
-      <view class="form-group form-group--tags">
-        <view class="form-tags-header">
-          <text class="form-icon">🏷️</text>
-          <text class="form-label-text">标签</text>
-        </view>
+       <view class="form-group form-group--tags">
+         <view class="form-tags-header">
+           <text class="iconfont form-icon">{{icons.kanjia}}</text>
+           <text class="form-label-text">标签</text>
+         </view>
 
         <view class="tags-container">
           <!-- 预设标签 -->

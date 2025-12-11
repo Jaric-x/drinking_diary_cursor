@@ -35,28 +35,28 @@
       </view>
 
       <!-- 统计卡片 -->
-      <view class="stats-card">
-        <view class="stat-item">
-          <text class="stat-icon">🍷</text>
-          <text class="stat-value">{{stats.totalNotes}}</text>
-          <text class="stat-label">总杯数</text>
-        </view>
+       <view class="stats-card">
+         <view class="stat-item">
+           <text class="iconfont stat-icon stat-icon--guozhi">{{icons.guozhi}}</text>
+           <text class="stat-value">{{stats.totalNotes}}</text>
+           <text class="stat-label">总杯数</text>
+         </view>
         
         <view class="stat-divider"></view>
-        
-        <view class="stat-item">
-          <text class="stat-icon">💰</text>
-          <text class="stat-value">¥{{stats.totalSpent}}</text>
-          <text class="stat-label">总花费</text>
-        </view>
+         
+         <view class="stat-item">
+           <text class="iconfont stat-icon stat-icon--qianbao">{{icons.qianbao}}</text>
+           <text class="stat-value">¥{{stats.totalSpent}}</text>
+           <text class="stat-label">总花费</text>
+         </view>
         
         <view class="stat-divider"></view>
-        
-        <view class="stat-item">
-          <text class="stat-icon">📅</text>
-          <text class="stat-value">{{stats.daysActive}}</text>
-          <text class="stat-label">记录天数</text>
-        </view>
+         
+         <view class="stat-item">
+           <text class="iconfont stat-icon stat-icon--riqi">{{icons.riqi}}</text>
+           <text class="stat-value">{{stats.daysActive}}</text>
+           <text class="stat-label">记录天数</text>
+         </view>
       </view>
 
       <!-- 照片墙 / 空状态 -->

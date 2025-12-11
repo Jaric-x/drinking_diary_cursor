@@ -5,11 +5,13 @@ Component({
     tabs: [
       {
         key: 'home',
-        pagePath: '/pages/index/index'
+        pagePath: '/pages/index/index',
+        icon: String.fromCodePoint(0x1020c) // icon-shouye (使用 fromCodePoint)
       },
       {
         key: 'profile',
-        pagePath: '/pages/profile/profile'
+        pagePath: '/pages/profile/profile',
+        icon: String.fromCodePoint(0x1020a) // icon-wode (使用 fromCodePoint)
       }
     ]
   },

@@ -12,7 +12,7 @@
       hover-class="none"
     >
       <view class="tabbar__icon-wrapper">
-        <text class="tabbar__icon tabbar__icon--home">🏠</text>
+        <text class="iconfont tabbar__icon tabbar__icon--home">{{tabs[0].icon}}</text>
       </view>
     </button>
 
@@ -28,7 +28,7 @@
       hover-class="none"
     >
       <view class="tabbar__icon-wrapper">
-        <text class="tabbar__icon tabbar__icon--user">👤</text>
+        <text class="iconfont tabbar__icon tabbar__icon--user">{{tabs[1].icon}}</text>
       </view>
     </button>
   </view>
