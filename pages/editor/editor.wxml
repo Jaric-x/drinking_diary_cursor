@@ -1,10 +1,9 @@
 <!--pages/editor/editor.wxml-->
-<wxs src="./editor.wxs" module="utils" />
 <view class="editor-page">
   <!-- 自定义导航栏 -->
-  <view class="editor-header" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+  <view class="editor-header" style="padding-top: {{statusBarHeight || 20}}px; height: {{totalNavHeight || 64}}px;">
     <view class="editor-header__blur"></view>
-    <view class="editor-header__content" style="height: {{navBarHeight}}px;">
+    <view class="editor-header__content" style="height: {{navBarHeight || 44}}px;">
       <!-- 左侧按钮 -->
       <view class="editor-header__left" bindtap="onCancel">
         <text class="editor-header__btn-text editor-header__btn-text--primary">{{isEditing ? '返回' : '取消'}}</text>
@@ -21,7 +20,7 @@
   </view>
 
   <!-- 滚动内容区 -->
-  <scroll-view class="editor-scroll" scroll-y enhanced show-scrollbar="{{false}}" style="top: {{totalNavHeight}}px;">
+  <scroll-view class="editor-scroll" scroll-y show-scrollbar="{{false}}">
     <view class="editor-content">
       
       <!-- 照片上传区 -->
@@ -50,7 +49,6 @@
             type="text" 
             value="{{name}}"
             placeholder="请输入酒品名称"
-            placeholder-class="form-input-placeholder"
             maxlength="50"
             bindinput="onNameInput"
           />
@@ -85,7 +83,6 @@
             type="text" 
             value="{{location}}"
             placeholder="在哪里喝的？"
-            placeholder-class="form-input-placeholder"
             maxlength="100"
             bindinput="onLocationInput"
           />
@@ -103,7 +100,6 @@
               type="digit" 
               value="{{price}}"
               placeholder="0.00"
-              placeholder-class="form-input-placeholder"
               maxlength="8"
               bindinput="onPriceInput"
             />
@@ -122,7 +118,7 @@
           <!-- 预设标签 -->
           <block wx:for="{{presetTags}}" wx:key="*this">
             <view 
-              class="tag-chip {{utils.isSelected(selectedTags, item) ? 'tag-chip--selected' : ''}}"
+              class="tag-chip {{tagSelectedMap[item] ? 'tag-chip--selected' : ''}}"
               data-tag="{{item}}"
               bindtap="toggleTag"
             >
@@ -131,9 +127,8 @@
           </block>
 
           <!-- 自定义标签 -->
-          <block wx:for="{{selectedTags}}" wx:key="*this">
+          <block wx:for="{{customTags}}" wx:key="*this">
             <view 
-              wx:if="{{!utils.isPresetTag(presetTags, item)}}"
               class="tag-chip tag-chip--custom tag-chip--selected"
               data-tag="{{item}}"
               bindtap="toggleTag"
@@ -157,12 +152,11 @@
                 type="text" 
                 value="{{customTag}}"
                 placeholder="最多5个字"
-                placeholder-class="custom-tag-placeholder"
                 maxlength="6"
                 bindinput="onCustomTagInput"
                 confirm-type="done"
                 bindconfirm="addCustomTag"
-                focus="{{true}}"
+                focus="{{showCustomTagInput}}"
               />
             </view>
             <text class="custom-tag-action" bindtap="addCustomTag">添加</text>
@@ -177,7 +171,6 @@
           class="form-textarea"
           value="{{notes}}"
           placeholder="记录你的品鉴感受、配方、口感等..."
-          placeholder-class="form-input-placeholder"
           maxlength="1000"
           auto-height
           bindinput="onNotesInput"

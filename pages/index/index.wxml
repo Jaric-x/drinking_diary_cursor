@@ -23,7 +23,8 @@
   <!-- 问候语栏 -->
   <view class="greeting-bar" style="top: {{totalNavHeight}}px;">
     <view class="greeting-text">
-      <text class="greeting-text__main">{{greeting}}</text>
+      <text class="greeting-text__line1">{{greetingLine1}}</text>
+      <text class="greeting-text__line2">{{greetingLine2}}</text>
     </view>
     <view class="greeting-avatar">
       <image 

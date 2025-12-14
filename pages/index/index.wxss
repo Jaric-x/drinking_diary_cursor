@@ -81,24 +81,41 @@
   left: 0;
   right: 0;
   height: 120rpx;
-  padding: 0 48rpx;
+  padding: 80rpx 60rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 40;
+  z-index: 45;
+  /* z-index 设置在导航栏(50)下方，卡片(10)上方，确保始终在卡片顶层 */
+  background-color: rgba(242, 242, 247, 0.98);
+  backdrop-filter: blur(30rpx);
+  box-sizing: border-box;
+  /* 确保 padding 计算在总高度内 */
 }
 
-.greeting-text__main {
-  font-size: 32rpx;
+.greeting-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+}
+
+.greeting-text__line1 {
+  font-size: 40rpx;
+  font-weight: 600;
+  color: #8E8E93;
+  line-height: 1.2;
+}
+
+.greeting-text__line2 {
+  font-size: 50rpx;
   font-weight: 700;
-  color: var(--text-main);
-  line-height: 1.4;
-  white-space: pre-line;
+  color: #000000;
+  line-height: 1.2;
 }
 
 .greeting-avatar {
-  width: 80rpx;
-  height: 80rpx;
+  width: 90rpx;
+  height: 90rpx;
   border-radius: 50%;
   overflow: hidden;
   border: 4rpx solid rgba(255, 255, 255, 0.5);

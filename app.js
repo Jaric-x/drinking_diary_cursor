@@ -29,8 +29,17 @@ App({
    */
   getSystemInfo() {
     try {
-      const systemInfo = wx.getSystemInfoSync();
-      const statusBarHeight = systemInfo.statusBarHeight || 20;
+      // 使用新的 API，降级到旧 API
+      let statusBarHeight = 20;
+      try {
+        const windowInfo = wx.getWindowInfo();
+        statusBarHeight = windowInfo.statusBarHeight || 20;
+      } catch (e) {
+        // 降级到旧 API
+        const systemInfo = wx.getSystemInfoSync();
+        statusBarHeight = systemInfo.statusBarHeight || 20;
+      }
+      
       const navBarHeight = 44; // 导航栏标准高度
       
       this.globalData.statusBarHeight = statusBarHeight;
@@ -44,6 +53,10 @@ App({
       });
     } catch (err) {
       console.error('[App] 获取系统信息失败:', err);
+      // 使用默认值
+      this.globalData.statusBarHeight = 20;
+      this.globalData.navBarHeight = 44;
+      this.globalData.totalNavHeight = 64;
     }
   },
 

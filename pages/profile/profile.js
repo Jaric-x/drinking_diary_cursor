@@ -36,12 +36,27 @@ Page({
   },
 
   onLoad() {
-    // 获取导航栏高度
-    this.setData({
-      statusBarHeight: app.globalData.statusBarHeight,
-      navBarHeight: app.globalData.navBarHeight,
-      totalNavHeight: app.globalData.totalNavHeight
-    });
+    // 获取导航栏高度，添加容错处理
+    try {
+      const globalData = (app && app.globalData) || {};
+      const statusBarHeight = globalData.statusBarHeight || 20;
+      const navBarHeight = globalData.navBarHeight || 44;
+      const totalNavHeight = globalData.totalNavHeight || (statusBarHeight + navBarHeight);
+      
+      this.setData({
+        statusBarHeight: statusBarHeight,
+        navBarHeight: navBarHeight,
+        totalNavHeight: totalNavHeight
+      });
+    } catch (err) {
+      console.error('[Profile] 初始化导航栏高度失败:', err);
+      // 使用默认值
+      this.setData({
+        statusBarHeight: 20,
+        navBarHeight: 44,
+        totalNavHeight: 64
+      });
+    }
     
     this.loadData();
   },

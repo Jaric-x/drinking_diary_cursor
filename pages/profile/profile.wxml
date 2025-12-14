@@ -2,9 +2,9 @@
 <view class="profile-page">
   
   <!-- 顶部导航栏 -->
-  <view class="profile-header" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
+  <view class="profile-header" style="padding-top: {{statusBarHeight || 20}}px; height: {{totalNavHeight || 64}}px;">
     <view class="profile-header__blur"></view>
-    <view class="profile-header__content" style="height: {{navBarHeight}}px;">
+    <view class="profile-header__content" style="height: {{navBarHeight || 44}}px;">
       <text class="profile-header__title">我的酒库</text>
     </view>
   </view>
@@ -13,12 +13,10 @@
   <scroll-view 
     class="profile-scroll" 
     scroll-y 
-    enhanced 
     show-scrollbar="{{false}}"
     enable-back-to-top
     refresher-enabled
     bindrefresherrefresh="onPullDownRefresh"
-    style="top: {{totalNavHeight}}px;"
   >
     <view class="profile-content">
       

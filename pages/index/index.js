@@ -14,7 +14,8 @@ Page({
     totalNavHeight: 64,
     
     // 问候语
-    greeting: '',
+    greetingLine1: '',
+    greetingLine2: '',
     
     // 分组后的记录数据
     groupedLogs: [], // [{date: '10.24', logs: [...]}]
@@ -46,8 +47,10 @@ Page({
     });
     
     // 设置问候语
+    const greeting = util.getGreeting();
     this.setData({
-      greeting: util.getGreeting()
+      greetingLine1: greeting.line1,
+      greetingLine2: greeting.line2
     });
     
     // 首次加载数据，尝试恢复浏览状态

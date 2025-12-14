@@ -37,6 +37,8 @@ Page({
     // 标签
     presetTags: PRESET_TAGS,
     selectedTags: [],
+    customTags: [], // 自定义标签列表
+    tagSelectedMap: {}, // 标签选中状态映射 {tagName: true/false}
     customTag: '',
     
     // UI状态
@@ -45,12 +47,27 @@ Page({
   },
 
   onLoad(options) {
-    // 获取导航栏高度
-    this.setData({
-      statusBarHeight: app.globalData.statusBarHeight,
-      navBarHeight: app.globalData.navBarHeight,
-      totalNavHeight: app.globalData.totalNavHeight
-    });
+    // 获取导航栏高度，添加容错处理
+    try {
+      const globalData = (app && app.globalData) || {};
+      const statusBarHeight = globalData.statusBarHeight || 20;
+      const navBarHeight = globalData.navBarHeight || 44;
+      const totalNavHeight = globalData.totalNavHeight || (statusBarHeight + navBarHeight);
+      
+      this.setData({
+        statusBarHeight: statusBarHeight,
+        navBarHeight: navBarHeight,
+        totalNavHeight: totalNavHeight
+      });
+    } catch (err) {
+      console.error('[Editor] 初始化导航栏高度失败:', err);
+      // 使用默认值
+      this.setData({
+        statusBarHeight: 20,
+        navBarHeight: 44,
+        totalNavHeight: 64
+      });
+    }
     
     // 检查是否是编辑模式
     if (options.id) {
@@ -74,6 +91,9 @@ Page({
         price: log.price ? String(log.price) : '',
         notes: log.notes || '',
         selectedTags: log.tags || []
+      }, () => {
+        // 更新标签选中状态映射，确保选中态正确显示
+        this.updateTagSelectedMap();
       });
     } else {
       wx.showToast({ title: '记录不存在', icon: 'none' });
@@ -163,6 +183,25 @@ Page({
   },
 
   /**
+   * 更新标签选中状态映射
+   */
+  updateTagSelectedMap() {
+    const { selectedTags, presetTags } = this.data;
+    const tagSelectedMap = {};
+    const customTags = [];
+    
+    selectedTags.forEach(tag => {
+      tagSelectedMap[tag] = true;
+      // 如果不是预设标签，则加入自定义标签列表
+      if (presetTags.indexOf(tag) < 0) {
+        customTags.push(tag);
+      }
+    });
+    
+    this.setData({ tagSelectedMap, customTags });
+  },
+
+  /**
    * 切换标签选中状态
    */
   toggleTag(e) {
@@ -176,7 +215,9 @@ Page({
       selectedTags.push(tag);
     }
     
-    this.setData({ selectedTags });
+    this.setData({ selectedTags }, () => {
+      this.updateTagSelectedMap();
+    });
   },
 
   /**
@@ -219,6 +260,8 @@ Page({
       selectedTags,
       customTag: '',
       showCustomTagInput: false
+    }, () => {
+      this.updateTagSelectedMap();
     });
     
     // 保存到用户标签库

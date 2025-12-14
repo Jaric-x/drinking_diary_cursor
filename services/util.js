@@ -37,21 +37,21 @@ function generateId() {
 
 /**
  * 获取当前时段的问候语
- * @returns {string} 问候语文本
+ * @returns {Object} 包含两行问候语的对象 {line1: string, line2: string}
  */
 function getGreeting() {
   const hour = new Date().getHours();
   
   if (hour >= 6 && hour < 11) {
-    return '早安，\n准备喝点什么？';
+    return { line1: '早安，', line2: '准备喝点什么？' };
   } else if (hour >= 11 && hour < 14) {
-    return '午后时光，\n小酌一杯？';
+    return { line1: '午后时光，', line2: '小酌一杯？' };
   } else if (hour >= 14 && hour < 18) {
-    return '下午好，\n要不要喝点什么？';
+    return { line1: '下午好，', line2: '要不要喝点什么？' };
   } else if (hour >= 18 && hour < 22) {
-    return '夜幕降临，\n来一杯吧';
+    return { line1: '夜幕降临，', line2: '来一杯吧' };
   } else {
-    return '夜深了，\n来一杯吗？';
+    return { line1: '夜深了，', line2: '来一杯吗？' };
   }
 }
 
