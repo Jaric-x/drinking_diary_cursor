@@ -76,8 +76,8 @@
 }
 
 .editor-header__icon {
-  width: 40rpx;
-  height: 40rpx;
+  width: 50rpx; 
+  height: 50rpx; 
 }
 
 /* 滚动区域 */
@@ -193,8 +193,12 @@
 }
 
 .form-icon {
-  font-size: 40rpx;
+  font-size: 50rpx; 
+  width: 50rpx;
+  height: 50rpx;
   opacity: 0.6;
+  display: inline-block;
+  line-height: 1;
 }
 
 .form-label-text {

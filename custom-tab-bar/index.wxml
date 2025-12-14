@@ -11,7 +11,7 @@
       bindtap="switchTab"
       hover-class="none"
     >
-      <view class="tabbar__icon-wrapper">
+      <view class="tabbar__icon-wrapper tabbar__icon-wrapper--home">
         <text class="iconfont tabbar__icon tabbar__icon--home">{{tabs[0].icon}}</text>
       </view>
     </button>
@@ -27,7 +27,7 @@
       bindtap="switchTab"
       hover-class="none"
     >
-      <view class="tabbar__icon-wrapper">
+      <view class="tabbar__icon-wrapper tabbar__icon-wrapper--user">
         <text class="iconfont tabbar__icon tabbar__icon--user">{{tabs[1].icon}}</text>
       </view>
     </button>

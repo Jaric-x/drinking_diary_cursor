@@ -65,20 +65,24 @@
   transition: all 0.3s ease;
   filter: grayscale(100%);
   opacity: 0.5;
+  color: inherit;
 }
 
 .tabbar__item--active .tabbar__icon {
   filter: grayscale(0%);
   opacity: 1;
   transform: scale(1.1);
+  color: #007AFF; /* 系统蓝色 */
 }
 
-.tabbar__icon--home {
-  /* Home图标样式 */
+.tabbar__icon-wrapper--home {
+  /* Home图标容器 - 向左移动 */
+  padding-right: 70rpx;
 }
 
-.tabbar__icon--user {
-  /* User图标样式 */
+.tabbar__icon-wrapper--user {
+  /* User图标容器 - 向右移动 */
+  padding-left: 70rpx;
 }
 
 /* 中间占位 - 为悬浮按钮留空间 */
@@ -92,18 +96,18 @@
   position: absolute;
   left: 50%;
   top: 0;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) translateY(20%); /* 下移20% */
   pointer-events: auto;
 }
 
 .tabbar__add {
-  width: 112rpx;
-  height: 112rpx;
-  min-width: 112rpx;
-  min-height: 112rpx;
-  max-width: 112rpx;
-  max-height: 112rpx;
-  border-radius: 56rpx; /* 确保是正圆 */
+  width: 123rpx; /* 112 * 1.1 = 123.2rpx，增加10% */
+  height: 123rpx; /* 112 * 1.1 = 123.2rpx，增加10% */
+  min-width: 123rpx;
+  min-height: 123rpx;
+  max-width: 123rpx;
+  max-height: 123rpx;
+  border-radius: 61.5rpx; /* 确保是正圆 */
   background-color: #007AFF; /* 系统蓝色 */
   box-shadow: 0 8rpx 24rpx rgba(0, 122, 255, 0.4);
   display: flex;
@@ -128,8 +132,8 @@
 /* 十字加号容器 */
 .tabbar__add-icon {
   position: relative;
-  width: 40rpx;
-  height: 40rpx;
+  width: 44rpx; /* 40 * 1.1 = 44rpx，增加10% */
+  height: 44rpx; /* 40 * 1.1 = 44rpx，增加10% */
 }
 
 /* 十字线条 */

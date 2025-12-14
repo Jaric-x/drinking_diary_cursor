@@ -60,26 +60,29 @@
       </view>
 
       <!-- 照片墙 / 空状态 -->
-      <view wx:if="{{isEmpty}}" class="empty-gallery">
-        <text class="empty-gallery__icon">🍷</text>
-        <text class="empty-gallery__text">还没有记录哦</text>
-      </view>
-
-      <view wx:else class="photo-grid">
-        <block wx:for="{{logs}}" wx:key="id">
-          <view 
-            class="photo-item"
-            data-id="{{item.id}}"
-            bindtap="onPhotoTap"
-          >
-            <image 
-              class="photo-item__image" 
-              src="{{item.imagePath || item.imageUrl}}" 
-              mode="aspectFill"
-              lazy-load
-              binderror="onImageError"
-            />
+      <view class="photo-grid {{isEmpty ? 'photo-grid--empty' : ''}}">
+        <block wx:if="{{isEmpty}}">
+          <view class="photo-grid__empty">
+            <text class="photo-grid__empty-text">创建笔记来丰富你的照片墙吧</text>
           </view>
+        </block>
+        
+        <block wx:else>
+          <block wx:for="{{logs}}" wx:key="id">
+            <view 
+              class="photo-item"
+              data-id="{{item.id}}"
+              bindtap="onPhotoTap"
+            >
+              <image 
+                class="photo-item__image" 
+                src="{{item.imagePath || item.imageUrl}}" 
+                mode="aspectFill"
+                lazy-load
+                binderror="onImageError"
+              />
+            </view>
+          </block>
         </block>
       </view>
 

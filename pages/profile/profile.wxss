@@ -113,6 +113,19 @@
   margin-bottom: 8rpx;
 }
 
+/* 统计图标颜色 */
+.stat-icon--guozhi {
+  color: #007AFF; /* 蓝色 - 总杯数 */
+}
+
+.stat-icon--qianbao {
+  color: #FF9500; /* 黄色/橙色 - 总花费 */
+}
+
+.stat-icon--riqi {
+  color: #34C759; /* 绿色 - 记录天数 */
+}
+
 .stat-value {
   font-size: 40rpx;
   font-weight: bold;
@@ -142,9 +155,40 @@
   border-radius: 16rpx;
   overflow: hidden;
   background-color: var(--color-bg);
+  min-height: 400rpx;
+  width: calc(100% - 64rpx);
+  box-sizing: border-box;
+}
+
+/* 照片墙空状态 */
+.photo-grid--empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border-radius: 16rpx;
+  min-height: 400rpx;
+}
+
+.photo-grid__empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 400rpx;
+}
+
+.photo-grid__empty-text {
+  font-size: 28rpx;
+  font-weight: 400;
+  color: var(--text-placeholder);
+  text-align: center;
+  padding: 0 32rpx;
 }
 
 .photo-item {
+  width: 100%;
   aspect-ratio: 1;
   background-color: #F5F5F5;
   overflow: hidden;
@@ -159,25 +203,5 @@
 .photo-item__image {
   width: 100%;
   height: 100%;
-}
-
-/* 空状态 */
-.empty-gallery {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 160rpx 0;
-  gap: 24rpx;
-}
-
-.empty-gallery__icon {
-  font-size: 160rpx;
-  opacity: 0.3;
-}
-
-.empty-gallery__text {
-  font-size: 32rpx;
-  font-weight: 500;
-  color: var(--text-placeholder);
+  display: block;
 }
