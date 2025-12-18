@@ -21,13 +21,19 @@
     <view class="profile-content">
       
       <!-- 用户信息 -->
-      <view class="user-info">
+      <view class="user-info" bindtap="onAvatarTap">
         <view class="user-avatar">
+          <!-- 已登录：显示用户头像 -->
           <image 
+            wx:if="{{isLogin}}"
             class="user-avatar__image" 
             src="{{avatarUrl}}" 
             mode="aspectFill"
           />
+          <!-- 未登录：显示默认灰色人像图标 -->
+          <view wx:else class="user-avatar__default">
+            <text class="user-avatar__icon">👤</text>
+          </view>
         </view>
         <text class="user-name">{{userName}}</text>
       </view>

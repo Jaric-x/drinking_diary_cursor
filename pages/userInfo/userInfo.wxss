@@ -1,0 +1,260 @@
+/* pages/userInfo/userInfo.wxss */
+.user-info-page {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #F2F2F7;
+}
+
+/* 顶部导航栏 */
+.user-info-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.user-info-header__blur {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(242, 242, 247, 0.8);
+  backdrop-filter: blur(40rpx);
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
+}
+
+.user-info-header__content {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 32rpx;
+}
+
+.user-info-header__left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.user-info-header__back {
+  font-size: 34rpx;
+  color: #007AFF;
+}
+
+.user-info-header__title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+  flex: 2;
+  text-align: center;
+}
+
+.user-info-header__right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* 滚动区域 */
+.user-info-scroll {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.user-info-content {
+  min-height: 100vh;
+  padding-bottom: 160rpx;
+}
+
+/* 信息卡片 */
+.info-card {
+  margin: 0 32rpx 48rpx;
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  overflow: hidden;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx;
+  background-color: #FFFFFF;
+}
+
+/* 按钮样式的行 - 彻底重置 button 默认样式 */
+button.info-row--button {
+  /* 重置 button 基础样式 */
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  line-height: normal;
+  text-align: left;
+  font-size: inherit;
+  
+  /* 应用 flex 布局 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  /* 添加实际的内边距 */
+  padding: 32rpx;
+  background-color: #FFFFFF;
+  
+  /* 盒模型 */
+  box-sizing: border-box;
+}
+
+button.info-row--button::after {
+  border: none;
+}
+
+button.info-row--button::before {
+  border: none;
+}
+
+.info-row__label {
+  font-size: 32rpx;
+  font-weight: normal;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.info-row__value {
+  display: flex;
+  align-items: center;
+  gap: 16rpx;
+}
+
+.info-avatar {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 50%;
+}
+
+.info-row__text {
+  font-size: 32rpx;
+  color: #8E8E93;
+}
+
+.info-row__arrow {
+  font-size: 48rpx;
+  color: #C7C7CC;
+  font-weight: 300;
+}
+
+.info-divider {
+  height: 1rpx;
+  background-color: rgba(198, 198, 200, 0.3);
+  margin-left: 32rpx;
+}
+
+/* 退出登录区域 */
+.logout-section {
+  margin: 0 32rpx;
+}
+
+.logout-btn {
+  background-color: #FFFFFF;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logout-btn__text {
+  font-size: 32rpx;
+  font-weight: 500;
+  color: #FF3B30;
+}
+
+.bottom-spacer {
+  height: 64rpx;
+}
+
+/* 昵称编辑弹窗 */
+.nickname-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 60rpx;
+}
+
+.nickname-modal__content {
+  width: 100%;
+  background-color: #FFFFFF;
+  border-radius: 28rpx;
+  overflow: hidden;
+}
+
+.nickname-modal__header {
+  padding: 40rpx 32rpx 24rpx;
+  text-align: center;
+}
+
+.nickname-modal__title {
+  font-size: 34rpx;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.9);
+}
+
+.nickname-modal__body {
+  padding: 0 32rpx 32rpx;
+}
+
+.nickname-modal__input {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 24rpx;
+  background-color: #F2F2F7;
+  border-radius: 20rpx;
+  font-size: 32rpx;
+  color: rgba(0, 0, 0, 0.9);
+  box-sizing: border-box;
+}
+
+.nickname-modal__footer {
+  display: flex;
+  border-top: 1rpx solid rgba(0, 0, 0, 0.1);
+}
+
+.nickname-modal__btn {
+  flex: 1;
+  height: 100rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 34rpx;
+}
+
+.nickname-modal__btn--cancel {
+  color: #8E8E93;
+  border-right: 1rpx solid rgba(0, 0, 0, 0.1);
+}
+
+.nickname-modal__btn--confirm {
+  color: #007AFF;
+  font-weight: 500;
+}

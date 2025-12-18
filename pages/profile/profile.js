@@ -2,6 +2,7 @@
 const app = getApp();
 const storageService = require('../../services/storage.js');
 const util = require('../../services/util.js');
+const userService = require('../../services/user.js');
 
 Page({
   data: {
@@ -18,8 +19,9 @@ Page({
     },
     
     // 用户信息
-    userName: '杰瑞克',
-    avatarUrl: 'https://picsum.photos/200/200',
+    isLogin: false,
+    userName: '点击登录',
+    avatarUrl: '',
     
     // 统计数据
     stats: {
@@ -58,17 +60,39 @@ Page({
       });
     }
     
+    this.loadUserInfo();
     this.loadData();
   },
 
   onShow() {
-    // 每次显示时刷新数据
+    // 每次显示时刷新用户信息和数据
+    this.loadUserInfo();
     this.loadData();
     
     // 更新TabBar选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
         selected: 1
+      });
+    }
+  },
+
+  /**
+   * 加载用户信息
+   */
+  loadUserInfo() {
+    const userInfo = userService.getUserInfo();
+    if (userInfo) {
+      this.setData({
+        isLogin: true,
+        userName: userInfo.nickname,
+        avatarUrl: userInfo.avatarUrl
+      });
+    } else {
+      this.setData({
+        isLogin: false,
+        userName: '点击登录',
+        avatarUrl: ''
       });
     }
   },
@@ -122,6 +146,52 @@ Page({
       totalSpent: totalSpent.toFixed(0), // 取整显示
       daysActive
     };
+  },
+
+  /**
+   * 点击头像
+   */
+  async onAvatarTap() {
+    if (this.data.isLogin) {
+      // 已登录，跳转到个人信息编辑页
+      wx.navigateTo({
+        url: '/pages/userInfo/userInfo',
+        fail: (err) => {
+          console.error('[Profile] 跳转个人信息页失败:', err);
+          wx.showToast({ title: '页面跳转失败', icon: 'none' });
+        }
+      });
+    } else {
+      // 未登录，触发登录流程
+      await this.handleLogin();
+    }
+  },
+
+  /**
+   * 处理登录
+   */
+  async handleLogin() {
+    try {
+      wx.showLoading({ title: '登录中...', mask: true });
+      
+      const userInfo = await userService.login();
+      
+      wx.hideLoading();
+      wx.showToast({ title: '登录成功', icon: 'success' });
+      
+      // 刷新页面显示
+      this.loadUserInfo();
+      
+    } catch (err) {
+      wx.hideLoading();
+      
+      if (err.message === '用户取消授权') {
+        wx.showToast({ title: '登录已取消', icon: 'none' });
+      } else {
+        console.error('[Profile] 登录失败:', err);
+        wx.showToast({ title: '登录失败，请重试', icon: 'none' });
+      }
+    }
   },
 
   /**

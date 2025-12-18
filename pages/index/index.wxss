@@ -128,6 +128,20 @@
   height: 100%;
 }
 
+.greeting-avatar__default {
+  width: 100%;
+  height: 100%;
+  background-color: #E5E5EA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.greeting-avatar__icon {
+  font-size: 50rpx;
+  color: #8E8E93;
+}
+
 /* 空状态 */
 .empty-state {
   position: fixed;

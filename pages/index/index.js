@@ -2,6 +2,7 @@
 const app = getApp();
 const storageService = require('../../services/storage.js');
 const util = require('../../services/util.js');
+const userService = require('../../services/user.js');
 
 // 浏览状态存储键
 const VIEW_STATE_KEY = 'home_view_state';
@@ -16,6 +17,10 @@ Page({
     // 问候语
     greetingLine1: '',
     greetingLine2: '',
+    
+    // 用户信息
+    userAvatar: '', // 用户头像
+    isLogin: false, // 是否已登录
     
     // 分组后的记录数据
     groupedLogs: [], // [{date: '10.24', logs: [...]}]
@@ -53,6 +58,9 @@ Page({
       greetingLine2: greeting.line2
     });
     
+    // 加载用户信息
+    this.loadUserInfo();
+    
     // 首次加载数据，尝试恢复浏览状态
     this.loadData(true);
   },
@@ -65,11 +73,32 @@ Page({
       });
     }
     
+    // 刷新用户信息（可能在个人页登录了）
+    this.loadUserInfo();
+    
     // 非首次显示时，尝试恢复浏览状态
     if (!this.data.isFirstLoad) {
       this.loadData(true);
     } else {
       this.setData({ isFirstLoad: false });
+    }
+  },
+
+  /**
+   * 加载用户信息
+   */
+  loadUserInfo() {
+    const userInfo = userService.getUserInfo();
+    if (userInfo) {
+      this.setData({
+        userAvatar: userInfo.avatarUrl,
+        isLogin: true
+      });
+    } else {
+      this.setData({
+        userAvatar: '',
+        isLogin: false
+      });
     }
   },
 

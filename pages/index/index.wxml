@@ -27,11 +27,17 @@
       <text class="greeting-text__line2">{{greetingLine2}}</text>
     </view>
     <view class="greeting-avatar">
+      <!-- 已登录：显示用户头像 -->
       <image 
+        wx:if="{{isLogin}}"
         class="greeting-avatar__image" 
-        src="https://picsum.photos/200/200" 
+        src="{{userAvatar}}" 
         mode="aspectFill"
       />
+      <!-- 未登录：显示默认灰色人像图标 -->
+      <view wx:else class="greeting-avatar__default">
+        <text class="greeting-avatar__icon">👤</text>
+      </view>
     </view>
   </view>
 

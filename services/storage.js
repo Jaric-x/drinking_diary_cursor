@@ -1,6 +1,7 @@
 /**
  * 数据存储服务
  * 处理所有本地数据的CRUD操作
+ * 支持多用户数据隔离
  */
 
 const util = require('./util.js');
@@ -10,17 +11,46 @@ const STORAGE_KEY_LOGS = 'drinking_diary_logs';
 const STORAGE_KEY_TAGS = 'drinking_diary_tags';
 
 /**
- * 获取所有记录
+ * 获取当前登录用户的 OpenID
+ * @returns {string|null}
+ */
+function getCurrentUserOpenId() {
+  try {
+    const app = getApp();
+    return app.globalData.userInfo?.openid || null;
+  } catch (err) {
+    console.warn('[StorageService] 获取当前用户ID失败:', err);
+    return null;
+  }
+}
+
+/**
+ * 获取所有记录（仅返回当前用户的记录）
  * @returns {Array} 记录数组，按创建时间倒序
  */
 function getLogs() {
   try {
-    const logs = wx.getStorageSync(STORAGE_KEY_LOGS);
-    if (!logs || !Array.isArray(logs)) {
+    const currentOpenId = getCurrentUserOpenId();
+    
+    // 未登录时返回空数组
+    if (!currentOpenId) {
+      console.log('[StorageService] 未登录，返回空数据');
       return [];
     }
+    
+    const allLogs = wx.getStorageSync(STORAGE_KEY_LOGS);
+    if (!allLogs || !Array.isArray(allLogs)) {
+      return [];
+    }
+    
+    // 过滤出当前用户的记录
+    const userLogs = allLogs.filter(log => log.openid === currentOpenId);
+    
     // 按创建时间倒序排列
-    return logs.sort((a, b) => b.createTime - a.createTime);
+    const sortedLogs = userLogs.sort((a, b) => b.createTime - a.createTime);
+    
+    console.log(`[StorageService] 加载用户 ${currentOpenId} 的记录，共 ${sortedLogs.length} 条`);
+    return sortedLogs;
   } catch (err) {
     console.error('[StorageService] 读取记录失败:', err);
     return [];
@@ -28,37 +58,53 @@ function getLogs() {
 }
 
 /**
- * 根据ID获取单条记录
+ * 根据ID获取单条记录（仅返回当前用户的记录）
  * @param {string} id - 记录ID
  * @returns {Object|null} 记录对象
  */
 function getLogById(id) {
-  const logs = getLogs();
+  const logs = getLogs(); // getLogs 已经过滤了当前用户的记录
   return logs.find(log => log.id === id) || null;
 }
 
 /**
- * 保存记录（新建或更新）
+ * 保存记录（新建或更新）- 自动关联当前用户
  * @param {Object} log - 记录对象
  * @returns {Promise<Object>} 保存后的记录对象
  */
 function saveLog(log) {
   return new Promise((resolve, reject) => {
     try {
-      const logs = getLogs();
+      const currentOpenId = getCurrentUserOpenId();
+      
+      // 未登录时抛出特殊错误，便于上层识别并触发登录
+      if (!currentOpenId) {
+        const error = new Error('未登录');
+        error.code = 'NOT_LOGIN';
+        reject(error);
+        return;
+      }
+      
+      // 读取所有用户的记录
+      const allLogs = wx.getStorageSync(STORAGE_KEY_LOGS) || [];
       const now = Date.now();
       
-      // 查找是否已存在
-      const existingIndex = logs.findIndex(item => item.id === log.id);
+      // 自动添加用户 openid
+      log.openid = currentOpenId;
+      
+      // 查找是否已存在（仅在当前用户的记录中查找）
+      const existingIndex = allLogs.findIndex(item => 
+        item.id === log.id && item.openid === currentOpenId
+      );
       
       if (existingIndex >= 0) {
         // 更新现有记录 - 保留原记录的创建时间信息
-        const oldLog = logs[existingIndex];
+        const oldLog = allLogs[existingIndex];
         log.createTime = oldLog.createTime; // 保留创建时间
         log.updateTime = now;
         log.dateString = oldLog.dateString; // 保留创建日期字符串（兼容旧逻辑）
         log.timeString = oldLog.timeString; // 保留创建时间字符串（兼容旧逻辑）
-        logs[existingIndex] = log;
+        allLogs[existingIndex] = log;
         console.log('[StorageService] 更新记录:', log.id);
       } else {
         // 新建记录
@@ -66,12 +112,12 @@ function saveLog(log) {
         log.updateTime = now;
         log.dateString = util.formatDate(now);
         log.timeString = util.formatTime(now);
-        logs.unshift(log);
-        console.log('[StorageService] 新建记录:', log.id);
+        allLogs.unshift(log);
+        console.log('[StorageService] 新建记录:', log.id, '用户:', currentOpenId);
       }
       
-      // 保存到本地存储
-      wx.setStorageSync(STORAGE_KEY_LOGS, logs);
+      // 保存所有用户的记录
+      wx.setStorageSync(STORAGE_KEY_LOGS, allLogs);
       resolve(log);
     } catch (err) {
       console.error('[StorageService] 保存记录失败:', err);
@@ -81,22 +127,37 @@ function saveLog(log) {
 }
 
 /**
- * 删除记录
+ * 删除记录（仅删除当前用户的记录）
  * @param {string} id - 记录ID
  * @returns {Promise<void>}
  */
 function deleteLog(id) {
   return new Promise((resolve, reject) => {
     try {
-      const logs = getLogs();
-      const logIndex = logs.findIndex(log => log.id === id);
+      const currentOpenId = getCurrentUserOpenId();
       
-      if (logIndex < 0) {
-        reject(new Error('记录不存在'));
+      // 未登录时抛出特殊错误
+      if (!currentOpenId) {
+        const error = new Error('未登录');
+        error.code = 'NOT_LOGIN';
+        reject(error);
         return;
       }
       
-      const log = logs[logIndex];
+      // 读取所有用户的记录
+      const allLogs = wx.getStorageSync(STORAGE_KEY_LOGS) || [];
+      
+      // 查找要删除的记录（必须是当前用户的）
+      const logIndex = allLogs.findIndex(log => 
+        log.id === id && log.openid === currentOpenId
+      );
+      
+      if (logIndex < 0) {
+        reject(new Error('记录不存在或无权限删除'));
+        return;
+      }
+      
+      const log = allLogs[logIndex];
       
       // 删除关联的图片文件
       if (log.imagePath) {
@@ -106,11 +167,11 @@ function deleteLog(id) {
       }
       
       // 从数组中移除
-      logs.splice(logIndex, 1);
+      allLogs.splice(logIndex, 1);
       
-      // 保存到本地存储
-      wx.setStorageSync(STORAGE_KEY_LOGS, logs);
-      console.log('[StorageService] 删除记录:', id);
+      // 保存所有用户的记录
+      wx.setStorageSync(STORAGE_KEY_LOGS, allLogs);
+      console.log('[StorageService] 删除记录:', id, '用户:', currentOpenId);
       resolve();
     } catch (err) {
       console.error('[StorageService] 删除记录失败:', err);

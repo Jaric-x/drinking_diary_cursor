@@ -3,6 +3,7 @@ const app = getApp();
 const storageService = require('../../services/storage.js');
 const fileService = require('../../services/file.js');
 const util = require('../../services/util.js');
+const userService = require('../../services/user.js');
 const { PRESET_TAGS } = require('../../constants/tags.js');
 
 Page({
@@ -347,7 +348,85 @@ Page({
     } catch (err) {
       console.error('保存失败:', err);
       wx.hideLoading();
-      wx.showToast({ title: '保存失败，请重试', icon: 'none' });
+      
+      // 检查是否是未登录错误
+      if (err.code === 'NOT_LOGIN') {
+        // 触发登录流程
+        await this.handleLoginAndSave();
+      } else {
+        wx.showToast({ title: '保存失败，请重试', icon: 'none' });
+        this.setData({ isSubmitting: false });
+      }
+    }
+  },
+
+  /**
+   * 处理登录并重新保存
+   */
+  async handleLoginAndSave() {
+    try {
+      // 提示用户需要登录
+      const confirmRes = await new Promise((resolve) => {
+        wx.showModal({
+          title: '需要登录',
+          content: '保存笔记需要登录，是否授权微信登录？',
+          confirmText: '授权登录',
+          cancelText: '取消',
+          success: (res) => resolve(res)
+        });
+      });
+      
+      if (!confirmRes.confirm) {
+        // 用户取消登录
+        this.setData({ isSubmitting: false });
+        return;
+      }
+      
+      // 执行登录
+      wx.showLoading({ title: '登录中...', mask: true });
+      await userService.login();
+      
+      // 登录成功后，重新保存
+      wx.showLoading({ title: '保存中...', mask: true });
+      
+      const { isEditing, editId, imagePath, imageUrl, name, rating, location, price, notes, selectedTags } = this.data;
+      
+      const log = {
+        id: isEditing ? editId : util.generateId(),
+        name: name.trim(),
+        rating: rating,
+        imagePath: imagePath || imageUrl,
+        imageUrl: imagePath || imageUrl,
+        location: location.trim(),
+        price: price ? parseFloat(price) : undefined,
+        notes: notes.trim(),
+        tags: selectedTags
+      };
+      
+      await storageService.saveLog(log);
+      
+      wx.hideLoading();
+      wx.showToast({ 
+        title: '保存成功', 
+        icon: 'success',
+        duration: 1500
+      });
+      
+      // 延迟返回，让用户看到成功提示
+      setTimeout(() => {
+        wx.navigateBack();
+      }, 1500);
+      
+    } catch (err) {
+      console.error('登录或保存失败:', err);
+      wx.hideLoading();
+      
+      if (err.message === '用户取消授权') {
+        wx.showToast({ title: '已取消登录', icon: 'none' });
+      } else {
+        wx.showToast({ title: '操作失败，请重试', icon: 'none' });
+      }
+      
       this.setData({ isSubmitting: false });
     }
   },
@@ -376,7 +455,13 @@ Page({
           } catch (err) {
             console.error('删除失败:', err);
             wx.hideLoading();
-            wx.showToast({ title: '删除失败，请重试', icon: 'none' });
+            
+            // 检查是否是未登录错误
+            if (err.code === 'NOT_LOGIN') {
+              wx.showToast({ title: '请先登录', icon: 'none' });
+            } else {
+              wx.showToast({ title: '删除失败，请重试', icon: 'none' });
+            }
           }
         }
       }

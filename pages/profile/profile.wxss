@@ -84,6 +84,20 @@
   height: 100%;
 }
 
+.user-avatar__default {
+  width: 100%;
+  height: 100%;
+  background-color: #E5E5EA;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-avatar__icon {
+  font-size: 100rpx;
+  color: #8E8E93;
+}
+
 .user-name {
   font-size: 40rpx;
   font-weight: bold;
