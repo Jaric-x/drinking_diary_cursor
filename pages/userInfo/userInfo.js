@@ -1,6 +1,8 @@
 // pages/userInfo/userInfo.js
 const app = getApp();
 const userService = require('../../services/user.js');
+const cloudService = require('../../services/cloud.js');
+const storageService = require('../../services/storage.js');
 
 Page({
   data: {
@@ -16,7 +18,11 @@ Page({
     
     // 昵称编辑弹窗
     showNicknameModal: false,
-    editingNickname: ''
+    editingNickname: '',
+    
+    // 云端数据
+    lastBackupTime: '',
+    backupStatusText: '无云备份'
   },
 
   onLoad() {
@@ -29,6 +35,9 @@ Page({
     
     // 加载用户信息
     this.loadUserInfo();
+    
+    // 加载最后备份时间
+    this.loadLastBackupTime();
   },
 
   /**
@@ -217,5 +226,186 @@ Page({
    */
   onBackTap() {
     wx.navigateBack();
+  },
+
+  /**
+   * 加载最后备份时间
+   */
+  async loadLastBackupTime() {
+    try {
+      const lastBackupTime = await cloudService.getLastBackupTime();
+      if (lastBackupTime) {
+        // 格式化时间显示 (MM-DD)
+        const date = new Date(lastBackupTime);
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        this.setData({
+          lastBackupTime: `${month}-${day}`,
+          backupStatusText: `备份时间: ${month}-${day}`
+        });
+      } else {
+        this.setData({
+          lastBackupTime: '',
+          backupStatusText: '无云备份'
+        });
+      }
+    } catch (err) {
+      console.error('[UserInfo] 加载最后备份时间失败:', err);
+      this.setData({
+        backupStatusText: '无云备份'
+      });
+    }
+  },
+
+  /**
+   * 备份到服务器
+   */
+  async onBackupTap() {
+    try {
+      // 获取本地笔记
+      const notes = storageService.getLogs();
+      
+      if (notes.length === 0) {
+        wx.showToast({ title: '暂无笔记需要备份', icon: 'none' });
+        return;
+      }
+      
+      wx.showLoading({ title: '备份中...', mask: true });
+      
+      // 调用云服务备份
+      const result = await cloudService.backupNotes(notes);
+      
+      wx.hideLoading();
+      
+      if (result.success) {
+        wx.showToast({ 
+          title: `备份成功 (${result.count}/${result.total})`, 
+          icon: 'success',
+          duration: 2000
+        });
+        
+        // 刷新最后备份时间
+        this.loadLastBackupTime();
+      } else {
+        throw new Error('备份失败');
+      }
+      
+    } catch (err) {
+      wx.hideLoading();
+      console.error('[UserInfo] 备份失败:', err);
+      wx.showToast({ title: '备份失败，请重试', icon: 'none' });
+    }
+  },
+
+  /**
+   * 从服务器恢复
+   */
+  onRestoreTap() {
+    wx.showModal({
+      title: '提示',
+      content: '恢复将覆盖本地所有笔记数据，确定继续吗？',
+      confirmText: '确定恢复',
+      confirmColor: '#007AFF',
+      success: (res) => {
+        if (res.confirm) {
+          this.handleRestore();
+        }
+      }
+    });
+  },
+
+  /**
+   * 处理恢复
+   */
+  async handleRestore() {
+    try {
+      wx.showLoading({ title: '恢复中...', mask: true });
+      
+      // 从云端获取笔记
+      const notes = await cloudService.restoreNotes();
+      
+      if (notes.length === 0) {
+        wx.hideLoading();
+        wx.showToast({ title: '云端暂无备份数据', icon: 'none' });
+        return;
+      }
+      
+      // 覆盖本地数据 - 使用正确的 storage key
+      wx.setStorageSync('drinking_diary_logs', notes);
+      
+      wx.hideLoading();
+      wx.showToast({ 
+        title: `恢复成功 (${notes.length}条)`, 
+        icon: 'success',
+        duration: 2000
+      });
+      
+      // 通知所有页面刷新
+      const pages = getCurrentPages();
+      pages.forEach(page => {
+        // 标记首页和个人页需要刷新
+        if (page.route === 'pages/index/index' || page.route === 'pages/profile/profile') {
+          // 直接调用 loadData 方法刷新数据
+          if (typeof page.loadData === 'function') {
+            page.loadData();
+          }
+        }
+      });
+      
+    } catch (err) {
+      wx.hideLoading();
+      console.error('[UserInfo] 恢复失败:', err);
+      wx.showToast({ title: '恢复失败，请重试', icon: 'none' });
+    }
+  },
+
+  /**
+   * 删除云端备份
+   */
+  onDeleteCloudTap() {
+    wx.showModal({
+      title: '警告',
+      content: '确定删除云端所有备份数据？此操作不可恢复！',
+      confirmText: '确定删除',
+      confirmColor: '#FF3B30',
+      success: (res) => {
+        if (res.confirm) {
+          this.handleDeleteCloud();
+        }
+      }
+    });
+  },
+
+  /**
+   * 处理删除云端备份
+   */
+  async handleDeleteCloud() {
+    try {
+      wx.showLoading({ title: '删除中...', mask: true });
+      
+      const result = await cloudService.deleteCloudBackup();
+      
+      wx.hideLoading();
+      
+      if (result.success) {
+        wx.showToast({ 
+          title: '已删除云端备份', 
+          icon: 'success' 
+        });
+        
+        // 清除最后备份时间显示
+        this.setData({ 
+          lastBackupTime: '',
+          backupStatusText: '当前无云备份'
+        });
+      } else {
+        throw new Error('删除失败');
+      }
+      
+    } catch (err) {
+      wx.hideLoading();
+      console.error('[UserInfo] 删除云端备份失败:', err);
+      wx.showToast({ title: '删除失败，请重试', icon: 'none' });
+    }
   }
 });

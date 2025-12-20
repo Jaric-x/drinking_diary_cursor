@@ -53,6 +53,40 @@
         </view>
       </view>
 
+      <!-- 云端数据卡片组 -->
+      <view class="info-card">
+        <!-- 备份到服务器 -->
+        <view class="info-row" bindtap="onBackupTap">
+          <text class="info-row__label">备份到服务器</text>
+          <view class="info-row__value">
+            <text class="info-row__text info-row__text--hint">{{backupStatusText}}</text>
+            <text class="info-row__arrow">›</text>
+          </view>
+        </view>
+
+        <!-- 分割线 -->
+        <view class="info-divider"></view>
+
+        <!-- 从服务器恢复 -->
+        <view class="info-row" bindtap="onRestoreTap">
+          <text class="info-row__label">从服务器恢复</text>
+          <view class="info-row__value">
+            <text class="info-row__arrow">›</text>
+          </view>
+        </view>
+
+        <!-- 分割线 -->
+        <view class="info-divider"></view>
+
+        <!-- 删除云端备份 -->
+        <view class="info-row" bindtap="onDeleteCloudTap">
+          <text class="info-row__label info-row__label--danger">删除云端备份</text>
+          <view class="info-row__value">
+            <text class="info-row__arrow">›</text>
+          </view>
+        </view>
+      </view>
+
       <!-- 退出登录按钮 -->
       <view class="logout-section">
         <view class="logout-btn" bindtap="onLogoutTap">

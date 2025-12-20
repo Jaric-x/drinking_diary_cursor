@@ -26,8 +26,8 @@ App({
     // 检查存储权限
     this.checkStorageAuth();
     
-    // 初始化测试数据（仅开发阶段）
-    this.initMockData();
+    // 初始化测试数据（已禁用，生产环境不再加载 mock 数据）
+    // this.initMockData();
     
     // 检查登录状态
     this.checkLoginStatus();
@@ -124,6 +124,7 @@ App({
   /**
    * 初始化测试数据（开发阶段使用）
    * 将 mock 数据关联到测试用户账号
+   * 已禁用，生产环境不再加载 mock 数据
    */
   initMockData() {
     try {

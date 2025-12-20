@@ -187,6 +187,16 @@ button.info-row--button::before {
   height: 64rpx;
 }
 
+/* 云端数据管理样式 */
+.info-row__label--danger {
+  color: #FF3B30;
+}
+
+.info-row__text--hint {
+  font-size: 28rpx;
+  color: #8E8E93;
+}
+
 /* 昵称编辑弹窗 */
 .nickname-modal {
   position: fixed;

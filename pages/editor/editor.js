@@ -354,7 +354,7 @@ Page({
         // 触发登录流程
         await this.handleLoginAndSave();
       } else {
-        wx.showToast({ title: '保存失败，请重试', icon: 'none' });
+      wx.showToast({ title: '保存失败，请重试', icon: 'none' });
         this.setData({ isSubmitting: false });
       }
     }
@@ -460,7 +460,7 @@ Page({
             if (err.code === 'NOT_LOGIN') {
               wx.showToast({ title: '请先登录', icon: 'none' });
             } else {
-              wx.showToast({ title: '删除失败，请重试', icon: 'none' });
+            wx.showToast({ title: '删除失败，请重试', icon: 'none' });
             }
           }
         }

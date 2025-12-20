@@ -108,12 +108,45 @@
 - 建议设置为 "仅创建者可读写"
 - 或自定义安全规则
 
+#### notes 集合 (Part 3 新增)
+在云开发控制台创建 `notes` 集合，字段结构:
+
+| 字段名 | 类型 | 说明 |
+|-------|------|------|
+| _id | string | 自动生成 |
+| _openid | string | 用户 OpenID (自动) |
+| noteId | string | 笔记 ID (本地 id) |
+| drinkName | string | 酒名 |
+| rating | number | 评分 |
+| price | number | 价格 |
+| notes | string | 笔记内容 |
+| imagePath | string | 图片云存储路径 |
+| date | string | 创建日期 |
+| createdAt | date | 备份时间 |
+| updatedAt | date | 更新时间 |
+
+**权限设置**: 
+- 建议设置为 "仅创建者可读写"
+
+**索引建议**:
+- `_openid`: 用于查询用户笔记（自动创建）
+- `noteId`: 用于 upsert 操作（建议创建）
+
 ### 3. 创建云存储文件夹
 
-在云开发控制台的云存储中创建 `avatar` 文件夹，用于存储用户头像:
+在云开发控制台的云存储中创建以下文件夹:
+
+#### avatar 文件夹
 ```
 cloud://cloud1-6ghdp0iubeb94db8/avatar/
 ```
+用途: 存储用户头像
+
+#### images 文件夹 (Part 3 新增)
+```
+cloud://cloud1-6ghdp0iubeb94db8/images/
+```
+用途: 存储笔记图片，结构为 `images/{openid}/{noteId}_{timestamp}.jpg`
 
 **权限设置**:
 - 建议设置为 "所有用户可读，仅创建者可写"
@@ -124,12 +157,13 @@ cloud://cloud1-6ghdp0iubeb94db8/avatar/
 
 ### 新增文件
 - ✅ `services/user.js` - 用户服务层
+- ✅ `services/cloud.js` - **云端数据服务层 (Part 3)**
 - ✅ `pages/userInfo/userInfo.js` - 个人信息页逻辑
 - ✅ `pages/userInfo/userInfo.json` - 个人信息页配置
 - ✅ `pages/userInfo/userInfo.wxml` - 个人信息页结构
 - ✅ `pages/userInfo/userInfo.wxss` - 个人信息页样式
 - ✅ `documents/PHASE2_IMPLEMENTATION.md` - 本文档
-- ✅ `documents/AVATAR_NICKNAME_UPDATE.md` - 头像昵称功能更新说明
+- ✅ `documents/TESTING_GUIDE.md` - 测试指南
 
 ### 修改文件
 - ✅ `app.js` - 添加云开发初始化和登录状态检查、Mock数据关联用户
@@ -143,9 +177,9 @@ cloud://cloud1-6ghdp0iubeb94db8/avatar/
 - ✅ `pages/profile/profile.wxml` - 适配登录态用户信息显示
 - ✅ `pages/profile/profile.wxss` - 添加默认头像样式
 - ✅ `pages/editor/editor.js` - **添加自动登录逻辑**（优化体验）
-- ✅ `pages/userInfo/userInfo.wxml` - **使用新版头像选择 API**（`open-type="chooseAvatar"`）+ 添加昵称编辑弹窗
-- ✅ `pages/userInfo/userInfo.wxss` - 添加 button 样式 + 弹窗样式
-- ✅ `pages/userInfo/userInfo.js` - **重构头像和昵称逻辑**（使用新版 API + 自定义弹窗）
+- ✅ `pages/userInfo/userInfo.wxml` - **使用新版头像选择 API**（`open-type="chooseAvatar"`）+ 添加昵称编辑弹窗 + **添加云端数据管理 UI (Part 3)**
+- ✅ `pages/userInfo/userInfo.wxss` - 添加 button 样式 + 弹窗样式 + **云端数据管理样式 (Part 3)**
+- ✅ `pages/userInfo/userInfo.js` - **重构头像和昵称逻辑**（使用新版 API + 自定义弹窗）+ **添加云端数据管理功能 (Part 3)**
 
 ---
 
@@ -328,24 +362,86 @@ cloud://cloud1-6ghdp0iubeb94db8/avatar/
 
 ## 🚀 下一步 (Part 3: 云端数据管理)
 
-Part 3 将实现以下功能:
-1. **备份到服务器** - 上传本地笔记数据到云端
-2. **从服务器恢复** - 下载云端数据覆盖本地
-3. **删除云端备份** - 清空云端所有笔记数据
+### Part 3: 云端数据管理 ✅
 
-需要创建 `notes` 集合并处理图片路径转换问题。
+**目标**: 实现本地笔记数据的云端备份、恢复与管理。
+
+#### 3.3 云端数据服务 (`services/cloud.js`)
+
+创建云端数据服务层，封装所有云端数据操作:
+
+```javascript
+// 主要功能
+- backupNotes(notes)     // 备份笔记到云端
+- restoreNotes()         // 从云端恢复笔记
+- deleteCloudBackup()    // 删除云端所有备份
+- getLastBackupTime()    // 获取最后备份时间
+```
+
+**关键实现**:
+1. **图片路径转换**: 识别本地临时路径 (`wxfile://`) 并上传到云存储 (`cloud://`)
+2. **Upsert 策略**: 使用 `noteId` 作为唯一标识，避免重复数据
+3. **批量操作**: 支持批量上传和删除，提高效率
+4. **错误容错**: 单条数据失败不影响整体流程
+
+#### 3.4 个人信息页功能扩展
+
+在 `pages/userInfo` 页面添加 **云端数据卡片组**:
+
+**1. 备份到服务器**
+- **UI**: 蓝色云上传图标 + "备份到服务器" + 右侧状态 (如 "上次: 10-24")
+- **逻辑**: 
+  - 读取本地 Storage `notes`
+  - 遍历笔记，识别临时图片路径 → 上传云存储 → 替换为云路径
+  - 将笔记存入 `notes` 集合 (upsert 策略)
+  - 更新 `users.lastBackupAt`
+  - Toast "备份成功"
+
+**2. 从服务器恢复**
+- **UI**: 绿色云下载图标 + "从服务器恢复"
+- **逻辑**:
+  - 弹窗确认 "将覆盖本地数据？"
+  - 读取云数据库 `notes` 集合
+  - 覆盖写入本地 Storage `notes`
+  - Toast "恢复成功" 并标记首页需要刷新
+
+**3. 删除云端备份**
+- **UI**: 红色垃圾桶图标 + "删除云端备份" (红色文字)
+- **逻辑**:
+  - 弹窗确认 "确定删除云端所有备份？不可恢复"
+  - 删除云存储中的所有图片
+  - 删除 `notes` 集合中该用户所有数据
+  - 清空 `users.lastBackupAt`
+  - Toast "已删除"
 
 ---
 
 ## 📝 注意事项
 
+### 通用注意事项
+
 1. **隐私政策**: 使用 `wx.getUserProfile` 需要在小程序中添加隐私政策说明
 2. **云开发配额**: 注意云存储和云数据库的免费配额限制
+   - 免费版云存储: 5GB
+   - 免费版云数据库: 2GB
+   - 免费版云函数调用: 1000万次/月
 3. **头像大小**: 建议对上传的头像进行压缩处理，控制在 100KB 以内
 4. **错误处理**: 所有云开发操作都已添加 try-catch 错误处理
 5. **网络检查**: 建议在云操作前检查网络状态
 6. **⚠️ 重要**: 首次登录时，只有测试账号 `ox5U-1w7Hp6gfsPofPY0srdA38K8` 会显示 5 条 Mock 数据，其他新账号登录后为空状态（这是正常的）
 7. **数据隔离**: 不同用户的笔记数据完全隔离，未登录时不显示任何数据
+
+### 云端数据管理注意事项
+
+8. **图片路径转换**: 
+   - 本地路径 (wxfile://) 会自动上传到云存储
+   - 云存储路径 (cloud://) 直接保存
+   - 网络路径 (http/https) 直接保存
+9. **备份策略**: 采用 Upsert 策略，相同 noteId 会覆盖旧数据
+10. **批量操作**: 大量笔记备份时可能耗时较长，已添加 Loading 提示
+11. **数据恢复**: 恢复操作会**完全覆盖**本地数据，请谨慎操作
+12. **删除操作**: 删除云端备份后**无法恢复**，请谨慎操作
+13. **权限设置**: 确保云数据库和云存储权限设置为 "仅创建者可读写"
 
 ---
 
@@ -361,15 +457,15 @@ Part 3 将实现以下功能:
 ---
 
 **开发完成时间**: 2025-12-17  
-**开发状态**: Part 1 和 Part 2 已完成 ✅ + **用户数据隔离** ✅  
-**下一阶段**: Part 3 云端数据管理（待开发）  
+**开发状态**: Part 1、Part 2 和 Part 3 已完成 ✅ + **用户数据隔离** ✅ + **云端数据管理** ✅  
+**下一阶段**: 根据实际使用情况优化和迭代  
 
 ---
 
 ## 🔗 相关文档
 
 - `documents/prd_v2.md` - 二期产品需求文档
-- `documents/USER_DATA_ISOLATION.md` - **用户数据隔离实现详解**
 - `documents/TESTING_GUIDE.md` - **测试指南**（推荐先阅读）
 - `services/storage.js` - 数据存储服务（已实现用户隔离）
 - `services/user.js` - 用户服务
+- `services/cloud.js` - **云端数据服务**（新增）
