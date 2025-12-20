@@ -15,7 +15,8 @@ Page({
     icons: {
       guozhi: String.fromCodePoint(0x10209),  // 果汁 (使用 fromCodePoint)
       qianbao: String.fromCodePoint(0x1020b), // 钱包 (使用 fromCodePoint)
-      riqi: String.fromCodePoint(0x1020d)     // 日期 (使用 fromCodePoint)
+      riqi: String.fromCodePoint(0x1020d),   // 日期 (使用 fromCodePoint)
+      xiaoxiong: String.fromCharCode(0xe603)  // 小熊图标 (BMP 范围内，使用 fromCharCode)
     },
     
     // 用户信息
@@ -34,7 +35,10 @@ Page({
     logs: [],
     
     // 空状态
-    isEmpty: false
+    isEmpty: false,
+    
+    // 下拉刷新状态
+    refresherTriggered: false
   },
 
   onLoad() {
@@ -209,11 +213,16 @@ Page({
   },
 
   /**
-   * 下拉刷新
+   * 下拉刷新（scroll-view 组件的刷新）
    */
   onPullDownRefresh() {
+    // 刷新数据
     this.loadData();
-    wx.stopPullDownRefresh();
+    
+    // 延迟关闭刷新状态，确保数据已更新
+    setTimeout(() => {
+      this.setData({ refresherTriggered: false });
+    }, 500);
   },
 
   /**

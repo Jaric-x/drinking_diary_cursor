@@ -36,7 +36,7 @@
       />
       <!-- 未登录：显示默认灰色人像图标 -->
       <view wx:else class="greeting-avatar__default">
-        <text class="greeting-avatar__icon">👤</text>
+        <text class="iconfont greeting-avatar__icon">{{icons.xiaoxiong}}</text>
       </view>
     </view>
   </view>

@@ -16,6 +16,7 @@
     show-scrollbar="{{false}}"
     enable-back-to-top
     refresher-enabled
+    refresher-triggered="{{refresherTriggered}}"
     bindrefresherrefresh="onPullDownRefresh"
   >
     <view class="profile-content">
@@ -32,7 +33,7 @@
           />
           <!-- 未登录：显示默认灰色人像图标 -->
           <view wx:else class="user-avatar__default">
-            <text class="user-avatar__icon">👤</text>
+            <text class="iconfont user-avatar__icon">{{icons.xiaoxiong}}</text>
           </view>
         </view>
         <text class="user-name">{{userName}}</text>

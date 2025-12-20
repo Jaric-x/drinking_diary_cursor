@@ -140,6 +140,10 @@
 .greeting-avatar__icon {
   font-size: 50rpx;
   color: #8E8E93;
+  font-family: "iconfont" !important;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* 空状态 */

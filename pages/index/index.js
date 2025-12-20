@@ -18,6 +18,11 @@ Page({
     greetingLine1: '',
     greetingLine2: '',
     
+    // 图标字符
+    icons: {
+      xiaoxiong: String.fromCharCode(0xe603)  // 小熊图标 (BMP 范围内，使用 fromCharCode)
+    },
+    
     // 用户信息
     userAvatar: '', // 用户头像
     isLogin: false, // 是否已登录
