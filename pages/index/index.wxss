@@ -80,17 +80,15 @@
   position: fixed;
   left: 0;
   right: 0;
-  height: 120rpx;
+  height: 176rpx;
   padding: 80rpx 60rpx;
   display: flex;
   justify-content: space-between;
   align-items: center;
   z-index: 45;
   /* z-index 设置在导航栏(50)下方，卡片(10)上方，确保始终在卡片顶层 */
-  background-color: rgba(242, 242, 247, 0.98);
-  backdrop-filter: blur(30rpx);
+  background-color: transparent;
   box-sizing: border-box;
-  /* 确保 padding 计算在总高度内 */
 }
 
 .greeting-text {
@@ -321,6 +319,12 @@
   color: var(--text-main);
   text-align: center;
   line-height: 1.2;
+  /* 单行显示，超过10个中文字用省略号 */
+  max-width: 420rpx;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
 }
 
 .card-rating {

@@ -49,7 +49,7 @@
   </view>
 
   <!-- 卡片流（垂直Swiper + 水平堆叠） -->
-  <view wx:else class="card-flow" style="top: {{totalNavHeight + 60}}px;">
+  <view wx:else class="card-flow" style="top: {{totalNavHeight + 90}}px;">
     <!-- 外层垂直Swiper（日期分组） -->
     <swiper 
       class="vertical-swiper"

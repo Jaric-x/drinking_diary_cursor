@@ -43,15 +43,15 @@ function getGreeting() {
   const hour = new Date().getHours();
   
   if (hour >= 6 && hour < 11) {
-    return { line1: '早安，', line2: '准备喝点什么？' };
+    return { line1: '早安，', line2: '准备喝点什么' };
   } else if (hour >= 11 && hour < 14) {
-    return { line1: '午后时光，', line2: '小酌一杯？' };
+    return { line1: '午后时光，', line2: '来一杯吧' };
   } else if (hour >= 14 && hour < 18) {
-    return { line1: '下午好，', line2: '要不要喝点什么？' };
+    return { line1: '下午好，', line2: '喝杯东西提提神吧' };
   } else if (hour >= 18 && hour < 22) {
-    return { line1: '夜幕降临，', line2: '来一杯吧' };
+    return { line1: '夜幕降临，', line2: '小酌一杯' };
   } else {
-    return { line1: '夜深了，', line2: '来一杯吗？' };
+    return { line1: '夜深了，', line2: '今晚喝的开心吗' };
   }
 }
 
