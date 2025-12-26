@@ -407,5 +407,18 @@ Page({
       console.error('[UserInfo] 删除云端备份失败:', err);
       wx.showToast({ title: '删除失败，请重试', icon: 'none' });
     }
+  },
+
+  /**
+   * 点击隐私协议
+   */
+  onPrivacyTap() {
+    wx.navigateTo({
+      url: '/pages/privacy/privacy',
+      fail: (err) => {
+        console.error('[UserInfo] 跳转隐私协议页失败:', err);
+        wx.showToast({ title: '页面跳转失败', icon: 'none' });
+      }
+    });
   }
 });

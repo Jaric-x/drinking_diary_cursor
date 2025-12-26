@@ -94,6 +94,11 @@
         </view>
       </view>
 
+      <!-- 隐私协议入口 -->
+      <view class="privacy-link-wrapper">
+        <text class="privacy-link" bindtap="onPrivacyTap">《隐私协议》</text>
+      </view>
+
       <!-- 底部留白 -->
       <view class="bottom-spacer"></view>
     </view>

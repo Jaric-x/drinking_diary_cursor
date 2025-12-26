@@ -232,15 +232,18 @@ Page({
       }
     }
     
+    // 处理分组数据，添加循环offset
+    const processedGroups = this.processGroupsWithOffset(groupedLogs, activeLogIndices);
+    
     // 获取当前卡片作为背景
-    const currentGroup = groupedLogs[activeGroupIndex];
+    const currentGroup = processedGroups[activeGroupIndex];
     const currentLogIdx = activeLogIndices[activeGroupIndex] || 0;
     const currentLog = currentGroup?.logs[currentLogIdx];
     const backgroundImage = currentLog ? (currentLog.imagePath || currentLog.imageUrl) : '';
     
     this.setData({
       isEmpty: false,
-      groupedLogs,
+      groupedLogs: processedGroups,
       activeLogIndices,
       backgroundImage,
       activeGroupIndex
@@ -258,6 +261,59 @@ Page({
     
     // 更新背景图片
     this.updateBackground();
+  },
+
+  /**
+   * 计算循环offset
+   * @param {number} logIndex - 卡片在数组中的索引
+   * @param {number} activeIndex - 当前激活的卡片索引
+   * @param {number} totalCards - 该组卡片总数
+   * @returns {number} 计算后的offset值
+   */
+  calculateCircularOffset(logIndex, activeIndex, totalCards) {
+    if (totalCards === 1) return 0;
+    
+    // 计算相对位置（循环）
+    let offset = (logIndex - activeIndex + totalCards) % totalCards;
+    
+    // 对于2张卡片的情况
+    if (totalCards === 2) {
+      // offset只能是0或1，保持2层堆叠
+      return offset;
+    }
+    
+    // 对于3张及以上卡片的情况
+    if (totalCards >= 3) {
+      // 保持最多3层堆叠
+      // offset=0是当前卡片，offset=1,2是后面堆叠的卡片
+      // offset>2的卡片应该显示为负offset（左边滑走的）
+      if (offset > 2) {
+        offset = -(totalCards - offset);
+      }
+      return offset;
+    }
+    
+    return offset;
+  },
+
+  /**
+   * 为分组数据添加循环offset信息
+   */
+  processGroupsWithOffset(groupedLogs, activeLogIndices) {
+    return groupedLogs.map((group, groupIndex) => {
+      const activeIndex = activeLogIndices[groupIndex] || 0;
+      const totalCards = group.logs.length;
+      
+      const processedLogs = group.logs.map((log, logIndex) => ({
+        ...log,
+        circularOffset: this.calculateCircularOffset(logIndex, activeIndex, totalCards)
+      }));
+      
+      return {
+        ...group,
+        logs: processedLogs
+      };
+    });
   },
 
   /**
@@ -304,7 +360,7 @@ Page({
   },
 
   /**
-   * 手势结束
+   * 手势结束 - 支持循环翻页
    */
   onTouchEnd(e) {
     const { touchStartX, isDragging, activeGroupIndex, activeLogIndices, groupedLogs } = this.data;
@@ -320,19 +376,40 @@ Page({
     
     const groupIndex = parseInt(e.currentTarget.dataset.groupIndex);
     const currentGroup = groupedLogs[groupIndex];
-    const maxIndex = currentGroup.logs.length - 1;
+    const totalCards = currentGroup.logs.length;
     const currentIndex = activeLogIndices[groupIndex] || 0;
     
-    if (isLeftSwipe && currentIndex < maxIndex) {
-      // 向左滑，查看下一张
+    // 如果只有一张卡片，不允许滑动
+    if (totalCards <= 1) {
       this.setData({
-        [`activeLogIndices.${groupIndex}`]: currentIndex + 1
+        touchStartX: 0,
+        isDragging: false
+      });
+      return;
+    }
+    
+    let newIndex = currentIndex;
+    
+    if (isLeftSwipe) {
+      // 向左滑，查看下一张（循环）
+      newIndex = (currentIndex + 1) % totalCards;
+      const newActiveLogIndices = { ...activeLogIndices, [groupIndex]: newIndex };
+      const processedGroups = this.processGroupsWithOffset(this.data.groupedLogs, newActiveLogIndices);
+      
+      this.setData({
+        [`activeLogIndices.${groupIndex}`]: newIndex,
+        groupedLogs: processedGroups
       });
       this.updateBackground();
-    } else if (isRightSwipe && currentIndex > 0) {
-      // 向右滑，查看上一张
+    } else if (isRightSwipe) {
+      // 向右滑，查看上一张（循环）
+      newIndex = (currentIndex - 1 + totalCards) % totalCards;
+      const newActiveLogIndices = { ...activeLogIndices, [groupIndex]: newIndex };
+      const processedGroups = this.processGroupsWithOffset(this.data.groupedLogs, newActiveLogIndices);
+      
       this.setData({
-        [`activeLogIndices.${groupIndex}`]: currentIndex - 1
+        [`activeLogIndices.${groupIndex}`]: newIndex,
+        groupedLogs: processedGroups
       });
       this.updateBackground();
     }

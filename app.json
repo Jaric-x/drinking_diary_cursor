@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/editor/editor",
     "pages/profile/profile",
-    "pages/userInfo/userInfo"
+    "pages/userInfo/userInfo",
+    "pages/privacy/privacy"
   ],
   "window": {
     "navigationBarTextStyle": "black",

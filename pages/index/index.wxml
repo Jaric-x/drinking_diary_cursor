@@ -16,7 +16,7 @@
   <view class="home-header" style="padding-top: {{statusBarHeight}}px; height: {{totalNavHeight}}px;">
     <view class="home-header__blur"></view>
     <view class="home-header__content" style="height: {{navBarHeight}}px;">
-      <text class="home-header__title">微醺笔记</text>
+      <text class="home-header__title">微醺手记</text>
     </view>
   </view>
 
@@ -73,9 +73,9 @@
           >
             <block wx:for="{{group.logs}}" wx:key="id" wx:for-item="log" wx:for-index="logIndex">
               <view 
-                class="diary-card-wrapper diary-card-wrapper--offset-{{logIndex - (activeLogIndices[groupIndex] || 0)}}"
+                class="diary-card-wrapper diary-card-wrapper--offset-{{log.circularOffset}}"
                 data-id="{{log.id}}"
-                data-offset="{{logIndex - (activeLogIndices[groupIndex] || 0)}}"
+                data-offset="{{log.circularOffset}}"
                 bindtap="onCardTap"
               >
                 <!-- 卡片 -->

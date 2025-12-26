@@ -15,7 +15,7 @@ App({
   },
 
   onLaunch() {
-    console.log('[App] 微醺笔记启动');
+    console.log('[App] 微醺手记启动');
     
     // 初始化云开发
     this.initCloud();

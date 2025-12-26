@@ -234,7 +234,7 @@
 /* 第三张卡片 (offset = 2) */
 .diary-card-wrapper--offset-2 {
   transform: translate(-50%, -50%) translateX(70rpx) scale(0.9) rotate(6deg);
-  opacity: 0.5;
+  opacity: 0.6;
   z-index: 10;
   pointer-events: none;
 }

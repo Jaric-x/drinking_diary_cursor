@@ -187,6 +187,24 @@ button.info-row--button::before {
   height: 64rpx;
 }
 
+/* 隐私协议入口 */
+.privacy-link-wrapper {
+  width: 100%;
+  padding: 40rpx 0 20rpx;
+  text-align: center;
+}
+
+.privacy-link {
+  font-size: 26rpx;
+  color: #007AFF;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.privacy-link:active {
+  opacity: 0.6;
+}
+
 /* 云端数据管理样式 */
 .info-row__label--danger {
   color: #FF3B30;
