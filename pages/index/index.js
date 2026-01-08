@@ -190,12 +190,11 @@ Page({
     // 转换为数组格式，并按日期降序排列
     const groupedLogs = Object.keys(groupMap)
       .sort((a, b) => {
-        // 将 MM.DD 转换为可比较的数字
-        const [aMonth, aDay] = a.split('.').map(Number);
-        const [bMonth, bDay] = b.split('.').map(Number);
+        // 获取每个日期组中第一条记录的时间戳进行比较
+        const aTimestamp = groupMap[a][0].createTime;
+        const bTimestamp = groupMap[b][0].createTime;
         // 降序排列（最新的在前面）
-        if (aMonth !== bMonth) return bMonth - aMonth;
-        return bDay - aDay;
+        return bTimestamp - aTimestamp;
       })
       .map(date => ({
         date,

@@ -191,6 +191,12 @@ Page({
     const tagSelectedMap = {};
     const customTags = [];
     
+    // 首先将所有预设标签设置为 false
+    presetTags.forEach(tag => {
+      tagSelectedMap[tag] = false;
+    });
+    
+    // 然后将选中的标签设置为 true
     selectedTags.forEach(tag => {
       tagSelectedMap[tag] = true;
       // 如果不是预设标签，则加入自定义标签列表
