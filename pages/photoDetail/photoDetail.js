@@ -10,6 +10,14 @@ Page({
     navBarHeight: 52,
     totalNavHeight: 72,
 
+    // 图标字符
+    icons: {
+      fanhui: String.fromCharCode(0xe6dc),      // 返回
+      weixin: String.fromCharCode(0xe600),       // 微信（新版 icon-weixintubiao1-copy）
+      xiazai: String.fromCharCode(0xe63c),       // 下载
+      close: String.fromCharCode(0xe605)         // 关闭（icon-icon-close）
+    },
+
     // 笔记列表（所有笔记，按照照片墙顺序）
     notes: [],
     

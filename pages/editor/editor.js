@@ -19,7 +19,8 @@ Page({
       dianzan: String.fromCharCode(0xe6d7),  // 点赞
       dingwei: String.fromCharCode(0xe6d9),  // 定位
       kaquan: String.fromCharCode(0xe6d8),   // 卡券
-      kanjia: String.fromCharCode(0xe6db)    // 砍价（标签）
+      kanjia: String.fromCharCode(0xe6db),   // 砍价（标签）
+      xingxing: String.fromCharCode(0xe60e)  // 星星
     },
     
     // 页面模式

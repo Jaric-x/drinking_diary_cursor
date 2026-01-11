@@ -3,7 +3,7 @@
   <!-- 顶部导航栏 -->
   <view class="header-nav" style="padding-top: {{statusBarHeight}}px;">
     <view class="nav-back" bindtap="onBack">
-      <text class="back-icon">←</text>
+      <text class="iconfont back-icon">{{icons.fanhui}}</text>
     </view>
   </view>
 
@@ -65,7 +65,7 @@
           class="share-modal__btn share-modal__btn--wechat" 
           open-type="share"
         >
-          <text class="share-modal__btn-icon">📤</text>
+          <text class="iconfont share-modal__btn-icon">{{icons.weixin}}</text>
           <text class="share-modal__btn-text">分享小程序</text>
         </button>
         
@@ -74,7 +74,7 @@
           class="share-modal__btn share-modal__btn--save" 
           bindtap="onSaveImage"
         >
-          <text class="share-modal__btn-icon">💾</text>
+          <text class="iconfont share-modal__btn-icon">{{icons.xiazai}}</text>
           <text class="share-modal__btn-text">保存相册</text>
         </button>
         
@@ -83,7 +83,7 @@
           class="share-modal__btn share-modal__btn--close" 
           bindtap="onCloseShareModal"
         >
-          <text class="share-modal__btn-icon">×</text>
+          <text class="iconfont share-modal__btn-icon">{{icons.close}}</text>
           <text class="share-modal__btn-text">关闭</text>
         </button>
       </view>

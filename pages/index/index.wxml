@@ -97,7 +97,7 @@
                       <text class="card-title">{{log.name}}</text>
                       <view class="card-rating">
                         <block wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
-                          <text class="card-star {{log.rating >= item ? 'card-star--filled' : ''}}">★</text>
+                          <text class="iconfont card-star {{log.rating >= item ? 'card-star--filled' : ''}}">{{icons.xingxing}}</text>
                         </block>
                       </view>
                     </view>

@@ -248,7 +248,7 @@
 }
 
 .rating-star {
-  font-size: 56rpx;
+  font-size: 40rpx;
   color: #E5E5EA;
   transition: all 0.2s ease;
 }

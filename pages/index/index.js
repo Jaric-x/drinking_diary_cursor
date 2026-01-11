@@ -20,7 +20,8 @@ Page({
     
     // 图标字符
     icons: {
-      xiaoxiong: String.fromCharCode(0xe603)  // 小熊图标 (BMP 范围内，使用 fromCharCode)
+      xiaoxiong: String.fromCharCode(0xe603),  // 小熊图标
+      xingxing: String.fromCharCode(0xe60e)    // 星星图标
     },
     
     // 用户信息

@@ -62,10 +62,10 @@
           <view class="rating-stars">
             <block wx:for="{{[1,2,3,4,5]}}" wx:key="*this">
               <text 
-                class="rating-star {{rating >= item ? 'rating-star--filled' : ''}}"
+                class="iconfont rating-star {{rating >= item ? 'rating-star--filled' : ''}}"
                 data-rating="{{item}}"
                 bindtap="onRatingTap"
-              >★</text>
+              >{{icons.xingxing}}</text>
             </block>
           </view>
         </view>
