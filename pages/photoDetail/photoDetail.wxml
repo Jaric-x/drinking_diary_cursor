@@ -1,0 +1,92 @@
+<!-- 照片详情页 - 沉浸式图片浏览 -->
+<view class="photo-detail">
+  <!-- 顶部导航栏 -->
+  <view class="header-nav" style="padding-top: {{statusBarHeight}}px;">
+    <view class="nav-back" bindtap="onBack">
+      <text class="back-icon">←</text>
+    </view>
+  </view>
+
+  <!-- 核心图片区 - Swiper 实现滑动切换 -->
+  <swiper 
+    wx:if="{{dataLoaded}}"
+    class="photo-detail__swiper"
+    current="{{currentIndex}}"
+    bindchange="onSwiperChange"
+    indicator-dots="{{false}}"
+    circular="{{false}}"
+  >
+    <block wx:for="{{notes}}" wx:key="id">
+      <swiper-item>
+        <view class="photo-detail__image-container">
+          <image 
+            class="photo-detail__image" 
+            src="{{item.imagePath || item.imageUrl}}" 
+            mode="aspectFit"
+            bindload="onImageLoad"
+            binderror="onImageError"
+          />
+        </view>
+      </swiper-item>
+    </block>
+  </swiper>
+
+  <!-- 底部操作区域 -->
+  <view class="bottom-control-bar">
+    <!-- 编辑按钮 -->
+    <view class="btn btn-edit" bindtap="onEdit">
+      <text class="btn-text">编辑笔记</text>
+    </view>
+    
+    <!-- 分享按钮 -->
+    <view class="btn btn-share" bindtap="onShare">
+      <text class="btn-text">分享笔记</text>
+    </view>
+  </view>
+
+  <!-- 分享海报弹窗 -->
+  <view class="share-modal {{showShareModal ? 'share-modal--visible' : ''}}" catchtap="onCloseShareModal">
+    <view class="share-modal__overlay"></view>
+    <view class="share-modal__content" catchtap="onModalContentTap">
+      <!-- 海报预览 -->
+      <view class="share-modal__poster">
+        <canvas 
+          type="2d" 
+          id="posterCanvas" 
+          class="share-modal__canvas"
+          style="width: {{posterWidth}}px; height: {{posterHeight}}px;"
+        ></canvas>
+      </view>
+      
+      <!-- 操作按钮 -->
+      <view class="share-modal__actions">
+        <!-- 分享小程序按钮 -->
+        <button 
+          class="share-modal__btn share-modal__btn--wechat" 
+          open-type="share"
+        >
+          <text class="share-modal__btn-icon">📤</text>
+          <text class="share-modal__btn-text">分享小程序</text>
+        </button>
+        
+        <!-- 保存图片按钮 -->
+        <button 
+          class="share-modal__btn share-modal__btn--save" 
+          bindtap="onSaveImage"
+        >
+          <text class="share-modal__btn-icon">💾</text>
+          <text class="share-modal__btn-text">保存相册</text>
+        </button>
+        
+        <!-- 关闭按钮 -->
+        <button 
+          class="share-modal__btn share-modal__btn--close" 
+          bindtap="onCloseShareModal"
+        >
+          <text class="share-modal__btn-icon">×</text>
+          <text class="share-modal__btn-text">关闭</text>
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

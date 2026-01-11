@@ -1,0 +1,275 @@
+/* ========== 整体视觉标准 ========== */
+.photo-detail {
+  width: 100%;
+  height: 100vh;
+  background-color: #000000;
+  overflow: hidden;
+  position: relative;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ========== 顶部导航栏 ========== */
+.header-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 52px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  padding-right: 8px;
+  background: #000000;
+}
+
+.nav-back {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.nav-back:active {
+  opacity: 0.5;
+}
+
+.back-icon {
+  font-size: 22px;
+  color: #FFFFFF;
+  font-weight: 300;
+}
+
+/* ========== 核心内容区：图片浏览 ========== */
+.photo-detail__swiper {
+  width: 100%;
+  height: 100vh;
+  box-sizing: border-box;
+}
+
+.photo-detail__image-container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 为顶部和底部留出空间，让图片垂直居中 */
+  padding-top: 52px;
+  padding-bottom: 120px;
+  box-sizing: border-box;
+}
+
+.photo-detail__image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* ========== 底部操作区域 ========== */
+.bottom-control-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 120px;
+  z-index: 99;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 32px;
+  padding-bottom: env(safe-area-inset-bottom);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%);
+}
+
+.btn {
+  flex: 1;
+  height: 52px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin: 0 8px;
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+/* 编辑按钮 */
+.btn-edit {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.btn-edit .btn-text {
+  color: #FFFFFF;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* 分享按钮 */
+.btn-share {
+  background: #FFFFFF;
+  box-shadow: 0 10px 25px -5px rgba(255, 255, 255, 0.1);
+}
+
+.btn-share .btn-text {
+  color: #000000;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+/* ========== 分享弹窗 ========== */
+.share-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.share-modal--visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* 遮罩层 */
+.share-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.share-modal__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+  padding: 0 32px;
+  max-width: 100%;
+}
+
+/* 海报卡片 */
+.share-modal__poster {
+  width: 85vw;
+  max-width: 320px;
+  background: #FFFFFF;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+  border: 2px solid #FFFFFF;
+}
+
+.share-modal__canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* 底部动作条 - 均匀分布 */
+.share-modal__actions {
+  width: 85vw;
+  max-width: 320px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 0;
+}
+
+.share-modal__btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  transition: transform 0.2s ease;
+  /* 三个按钮平分宽度 */
+  flex: 1;
+  max-width: 80px;
+  /* button 组件重置样式 */
+  line-height: normal;
+  font-size: inherit;
+}
+
+.share-modal__btn::after {
+  border: none;
+}
+
+.share-modal__btn:active {
+  transform: scale(0.95);
+}
+
+/* 按钮图标统一样式 */
+.share-modal__btn-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 按钮文字统一样式 */
+.share-modal__btn-text {
+  font-size: 11px;
+  font-weight: 700;
+  color: #FFFFFF;
+  opacity: 0.8;
+  margin-top: 8px;
+  display: block;
+}
+
+/* 分享小程序按钮 - 微信品牌绿 */
+.share-modal__btn--wechat .share-modal__btn-icon {
+  background: #07C160;
+  box-shadow: 0 8px 20px -4px rgba(7, 193, 96, 0.3);
+  font-size: 28px;
+  color: #FFFFFF;
+}
+
+/* 保存图片按钮 - 纯白色实体 */
+.share-modal__btn--save .share-modal__btn-icon {
+  background: #FFFFFF;
+  box-shadow: 0 8px 20px -4px rgba(255, 255, 255, 0.2);
+  font-size: 28px;
+  color: #000000;
+}
+
+/* 关闭按钮 - 毛玻璃效果 */
+.share-modal__btn--close .share-modal__btn-icon {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  font-size: 32px;
+  color: #FFFFFF;
+  font-weight: 300;
+}

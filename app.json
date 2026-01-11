@@ -3,6 +3,7 @@
     "pages/index/index",
     "pages/editor/editor",
     "pages/profile/profile",
+    "pages/photoDetail/photoDetail",
     "pages/userInfo/userInfo",
     "pages/privacy/privacy"
   ],

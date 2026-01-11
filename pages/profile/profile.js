@@ -203,10 +203,11 @@ Page({
    */
   onPhotoTap(e) {
     const { id } = e.currentTarget.dataset;
+    // 跳转到照片详情页而不是编辑页
     wx.navigateTo({
-      url: `/pages/editor/editor?id=${id}`,
+      url: `/pages/photoDetail/photoDetail?id=${id}`,
       fail: (err) => {
-        console.error('[Profile] 跳转编辑页失败:', err);
+        console.error('[Profile] 跳转照片详情页失败:', err);
         wx.showToast({ title: '页面跳转失败', icon: 'none' });
       }
     });
