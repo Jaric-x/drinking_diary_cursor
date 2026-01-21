@@ -52,8 +52,22 @@ Page({
       return;
     }
 
+    // 保存笔记 ID 供后续使用
+    this.noteId = noteId;
+
     // 加载所有笔记数据
     this.loadNotes(noteId);
+  },
+
+  /**
+   * 页面显示时刷新数据（从编辑器返回时会触发）
+   */
+  onShow() {
+    // 如果页面已经加载过数据，则刷新
+    if (this.data.dataLoaded && this.noteId) {
+      console.log('[PhotoDetail] 页面显示，刷新数据');
+      this.loadNotes(this.noteId);
+    }
   },
 
   /**

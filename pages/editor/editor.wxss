@@ -290,12 +290,12 @@
 }
 
 .tag-chip--selected .tag-chip__text {
-  color: #FFFFFF;
+  color: #FFFFFF !important;
 }
 
 .tag-chip__text {
   line-height: 1;
-  color: inherit;
+  color: rgba(0, 0, 0, 0.7); /* 明确设置未选中态的黑色 */
 }
 
 .tag-chip__close {
