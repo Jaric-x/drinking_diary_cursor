@@ -3,9 +3,22 @@ const app = getApp();
 const storageService = require('../../services/storage.js');
 const util = require('../../services/util.js');
 const userService = require('../../services/user.js');
+const onboardingService = require('../../services/onboarding.js');
+const guideVideoCacheService = require('../../services/guide-video-cache.js');
 
 // 浏览状态存储键
 const VIEW_STATE_KEY = 'home_view_state';
+const GUIDE_VIDEO_SOURCES = [
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/guide1.mp4',
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/guide2.mp4',
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/guide3.mp4'
+];
+
+const GUIDE_TEXTS = [
+  '欢迎来到微醺手记，记录每一次微醺时刻，让灵感与风味被好好珍藏。',
+  '点击“+”按钮，写下你的酒款、口感和当下心情，轻松完成第一条记录。',
+  '你的每一杯都值得被陈列。现在开始，打造属于你的酒柜照片墙。'
+];
 
 Page({
   data: {
@@ -46,7 +59,13 @@ Page({
     
     // 手势相关
     touchStartX: 0,
-    isDragging: false
+    isDragging: false,
+
+    // 新手引导
+    showGuideModal: false,
+    currentGuideStep: 0,
+    guideSteps: [],
+    guideVideoError: ''
   },
 
   onLoad() {
@@ -69,6 +88,9 @@ Page({
     
     // 首次加载数据，尝试恢复浏览状态
     this.loadData(true);
+
+    // 初始化新手引导
+    this.initGuideFlow();
   },
 
   onShow() {
@@ -87,6 +109,102 @@ Page({
       this.loadData(true);
     } else {
       this.setData({ isFirstLoad: false });
+    }
+
+    this.updateTabBarGuideBlocking(!!this.data.showGuideModal);
+  },
+
+  /**
+   * 初始化引导流程
+   */
+  async initGuideFlow() {
+    if (!onboardingService.isNewUser()) {
+      this.updateTabBarGuideBlocking(false);
+      return;
+    }
+
+    this.setData({
+      showGuideModal: true,
+      currentGuideStep: 0,
+      guideVideoError: '',
+      guideSteps: GUIDE_VIDEO_SOURCES.map((source, index) => ({
+        source,
+        playableSrc: '',
+        text: GUIDE_TEXTS[index] || ''
+      }))
+    });
+    this.updateTabBarGuideBlocking(true);
+
+    try {
+      const prepared = await guideVideoCacheService.prepareGuideVideos(GUIDE_VIDEO_SOURCES);
+      const guideSteps = prepared.map((item, index) => ({
+        source: GUIDE_VIDEO_SOURCES[index],
+        playableSrc: item.tempFilePath || item.tempUrl || '',
+        text: GUIDE_TEXTS[index] || ''
+      }));
+
+      this.setData({ guideSteps });
+    } catch (err) {
+      console.error('[Home] 引导视频预缓存失败:', err);
+      // 兜底：至少使用 source 直连播放
+      this.setData({
+        guideSteps: GUIDE_VIDEO_SOURCES.map((source, index) => ({
+          source,
+          playableSrc: '',
+          text: GUIDE_TEXTS[index] || ''
+        }))
+      });
+    }
+  },
+
+  /**
+   * 点击下一步
+   */
+  onGuideNext() {
+    const nextStep = this.data.currentGuideStep + 1;
+    if (nextStep >= 3) {
+      return;
+    }
+
+    this.setData({
+      currentGuideStep: nextStep,
+      guideVideoError: ''
+    });
+  },
+
+  /**
+   * 完成引导
+   */
+  onGuideStart() {
+    onboardingService.markCompleted('completed');
+    this.setData({
+      showGuideModal: false,
+      guideVideoError: ''
+    });
+    this.updateTabBarGuideBlocking(false);
+  },
+
+  /**
+   * 引导视频播放错误
+   */
+  onGuideVideoError(e) {
+    const step = Number(e.currentTarget.dataset.step || 0);
+    const source = GUIDE_VIDEO_SOURCES[step];
+    const fallbackSrc = guideVideoCacheService.getPlayableSource(source) || '';
+    const stepKey = `guideSteps[${step}].playableSrc`;
+
+    this.setData({
+      guideVideoError: '视频加载失败，你仍可继续下一步。',
+      [stepKey]: fallbackSrc
+    });
+  },
+
+  updateTabBarGuideBlocking(blocking) {
+    if (typeof this.getTabBar === 'function') {
+      const tabBar = this.getTabBar();
+      if (tabBar && typeof tabBar.setGuideBlocking === 'function') {
+        tabBar.setGuideBlocking(blocking);
+      }
     }
   },
 

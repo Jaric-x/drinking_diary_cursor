@@ -446,3 +446,96 @@
   line-height: 1;
   white-space: nowrap;
 }
+
+/* 新手引导弹窗 */
+.guide-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32rpx;
+  box-sizing: border-box;
+}
+
+.guide-modal-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 620rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.guide-modal {
+  width: 100%;
+  max-height: 74vh;
+  background: #ffffff;
+  border-radius: 32rpx;
+  overflow: hidden;
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.2);
+}
+
+.guide-video-box {
+  width: 100%;
+  height: 68vh;
+  max-height: 74vh;
+  min-height: 500rpx;
+  background: #000000;
+}
+
+.guide-video {
+  width: 100%;
+  height: 100%;
+}
+
+.guide-video-placeholder {
+  width: 100%;
+  height: 100%;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 28rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.guide-content {
+  padding: 20rpx 24rpx 10rpx;
+}
+
+.guide-text {
+  display: block;
+  color: #1f1f1f;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.guide-error {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #ff3b30;
+}
+
+.guide-actions-outside {
+  position: static;
+  margin-top: 50rpx;
+  width: 100%;
+}
+
+.guide-btn {
+  width: 100%;
+  height: 84rpx;
+  line-height: 50rpx;
+  border-radius: 999rpx;
+  font-size: 30rpx;
+  background: transparent;
+  color: #ffffff;
+  border: 1rpx solid rgba(255, 255, 255, 0.75);
+}
+
+.guide-btn::after {
+  border: none;
+}

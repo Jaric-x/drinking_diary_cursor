@@ -2,6 +2,7 @@
 Component({
   data: {
     selected: 0,
+    guideBlocking: false,
     tabs: [
       {
         key: 'home',
@@ -17,10 +18,20 @@ Component({
   },
 
   methods: {
+    setGuideBlocking(blocking) {
+      this.setData({
+        guideBlocking: !!blocking
+      });
+    },
+
     /**
      * 切换Tab
      */
     switchTab(e) {
+      if (this.data.guideBlocking) {
+        return;
+      }
+
       const { path, index } = e.currentTarget.dataset;
       
       // 如果是当前页面，不执行跳转
@@ -39,6 +50,10 @@ Component({
      * 打开编辑页（新建记录）
      */
     openEditor() {
+      if (this.data.guideBlocking) {
+        return;
+      }
+
       wx.navigateTo({
         url: '/pages/editor/editor'
       });

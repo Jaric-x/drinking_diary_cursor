@@ -1,5 +1,5 @@
 <!-- custom-tab-bar/index.wxml -->
-<view class="tabbar">
+<view wx:if="{{!guideBlocking}}" class="tabbar">
   <view class="tabbar__blur"></view>
   
   <view class="tabbar__content">

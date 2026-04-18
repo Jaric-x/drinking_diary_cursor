@@ -133,4 +133,50 @@
     </view>
   </view>
 
+  <!-- 新手引导弹窗 -->
+  <view wx:if="{{showGuideModal}}" class="guide-mask" catchtouchmove="preventBubble">
+    <view
+      class="guide-modal-wrap"
+      catch:tap="preventBubble"
+    >
+      <view class="guide-modal">
+      <view class="guide-video-box">
+        <video
+          wx:if="{{guideSteps[currentGuideStep] && guideSteps[currentGuideStep].playableSrc}}"
+          class="guide-video"
+          src="{{guideSteps[currentGuideStep].playableSrc}}"
+          autoplay
+          loop
+          muted
+          show-center-play-btn="{{false}}"
+          controls="{{false}}"
+          objectFit="cover"
+          data-step="{{currentGuideStep}}"
+          binderror="onGuideVideoError"
+        />
+        <view wx:else class="guide-video-placeholder">
+          <text>视频加载中...</text>
+        </view>
+      </view>
+      </view>
+
+      <view class="guide-actions-outside">
+        <button
+          wx:if="{{currentGuideStep < 2}}"
+          class="guide-btn guide-btn--primary"
+          bindtap="onGuideNext"
+        >
+          下一步
+        </button>
+        <button
+          wx:else
+          class="guide-btn guide-btn--primary"
+          bindtap="onGuideStart"
+        >
+          开启我的微醺手记
+        </button>
+      </view>
+    </view>
+  </view>
+
 </view>
