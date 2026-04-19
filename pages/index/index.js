@@ -9,15 +9,9 @@ const guideVideoCacheService = require('../../services/guide-video-cache.js');
 // 浏览状态存储键
 const VIEW_STATE_KEY = 'home_view_state';
 const GUIDE_VIDEO_SOURCES = [
-  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/guide1.mp4',
-  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/guide2.mp4',
-  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/guide3.mp4'
-];
-
-const GUIDE_TEXTS = [
-  '欢迎来到微醺手记，记录每一次微醺时刻，让灵感与风味被好好珍藏。',
-  '点击“+”按钮，写下你的酒款、口感和当下心情，轻松完成第一条记录。',
-  '你的每一杯都值得被陈列。现在开始，打造属于你的酒柜照片墙。'
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/final1.mp4',
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/final2.mp4',
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/final3.mp4'
 ];
 
 Page({
@@ -64,8 +58,7 @@ Page({
     // 新手引导
     showGuideModal: false,
     currentGuideStep: 0,
-    guideSteps: [],
-    guideVideoError: ''
+    guideSteps: []
   },
 
   onLoad() {
@@ -126,11 +119,9 @@ Page({
     this.setData({
       showGuideModal: true,
       currentGuideStep: 0,
-      guideVideoError: '',
-      guideSteps: GUIDE_VIDEO_SOURCES.map((source, index) => ({
+      guideSteps: GUIDE_VIDEO_SOURCES.map((source) => ({
         source,
-        playableSrc: '',
-        text: GUIDE_TEXTS[index] || ''
+        playableSrc: ''
       }))
     });
     this.updateTabBarGuideBlocking(true);
@@ -139,8 +130,7 @@ Page({
       const prepared = await guideVideoCacheService.prepareGuideVideos(GUIDE_VIDEO_SOURCES);
       const guideSteps = prepared.map((item, index) => ({
         source: GUIDE_VIDEO_SOURCES[index],
-        playableSrc: item.tempFilePath || item.tempUrl || '',
-        text: GUIDE_TEXTS[index] || ''
+        playableSrc: item.tempFilePath || item.tempUrl || ''
       }));
 
       this.setData({ guideSteps });
@@ -148,10 +138,9 @@ Page({
       console.error('[Home] 引导视频预缓存失败:', err);
       // 兜底：至少使用 source 直连播放
       this.setData({
-        guideSteps: GUIDE_VIDEO_SOURCES.map((source, index) => ({
+        guideSteps: GUIDE_VIDEO_SOURCES.map((source) => ({
           source,
-          playableSrc: '',
-          text: GUIDE_TEXTS[index] || ''
+          playableSrc: ''
         }))
       });
     }
@@ -167,8 +156,7 @@ Page({
     }
 
     this.setData({
-      currentGuideStep: nextStep,
-      guideVideoError: ''
+      currentGuideStep: nextStep
     });
   },
 
@@ -178,8 +166,7 @@ Page({
   onGuideStart() {
     onboardingService.markCompleted('completed');
     this.setData({
-      showGuideModal: false,
-      guideVideoError: ''
+      showGuideModal: false
     });
     this.updateTabBarGuideBlocking(false);
   },
@@ -194,7 +181,6 @@ Page({
     const stepKey = `guideSteps[${step}].playableSrc`;
 
     this.setData({
-      guideVideoError: '视频加载失败，你仍可继续下一步。',
       [stepKey]: fallbackSrc
     });
   },

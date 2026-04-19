@@ -501,24 +501,6 @@
   justify-content: center;
 }
 
-.guide-content {
-  padding: 20rpx 24rpx 10rpx;
-}
-
-.guide-text {
-  display: block;
-  color: #1f1f1f;
-  font-size: 26rpx;
-  line-height: 1.5;
-}
-
-.guide-error {
-  display: block;
-  margin-top: 12rpx;
-  font-size: 24rpx;
-  color: #ff3b30;
-}
-
 .guide-actions-outside {
   position: static;
   margin-top: 50rpx;

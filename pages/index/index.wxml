@@ -173,7 +173,7 @@
           class="guide-btn guide-btn--primary"
           bindtap="onGuideStart"
         >
-          开启我的微醺手记
+          开启微醺手记
         </button>
       </view>
     </view>
