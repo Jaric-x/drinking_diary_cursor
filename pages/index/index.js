@@ -58,10 +58,17 @@ Page({
     // 新手引导
     showGuideModal: false,
     currentGuideStep: 0,
-    guideSteps: []
+    guideSteps: [],
+    guideMaskStyle: '',
+    guideModalWrapStyle: '',
+    guideModalStyle: '',
+    guideVideoBoxStyle: '',
+    guideActionsStyle: ''
   },
 
   onLoad() {
+    this.initGuideLayout();
+
     // 获取导航栏高度
     this.setData({
       statusBarHeight: app.globalData.statusBarHeight,
@@ -87,6 +94,8 @@ Page({
   },
 
   onShow() {
+    this.initGuideLayout();
+
     // 更新TabBar选中状态
     if (typeof this.getTabBar === 'function' && this.getTabBar()) {
       this.getTabBar().setData({
@@ -105,6 +114,34 @@ Page({
     }
 
     this.updateTabBarGuideBlocking(!!this.data.showGuideModal);
+  },
+
+  initGuideLayout() {
+    try {
+      const windowInfo = wx.getWindowInfo ? wx.getWindowInfo() : wx.getSystemInfoSync();
+      const screenWidth = windowInfo.windowWidth || 375;
+      const screenHeight = windowInfo.windowHeight || 667;
+      const safeBottom = windowInfo.safeArea ? Math.max(0, screenHeight - windowInfo.safeArea.bottom) : 0;
+
+      const sidePadding = 16;
+      const topPadding = 16;
+      const bottomPadding = Math.max(16, safeBottom + 10);
+
+      const modalWidth = Math.min(screenWidth - sidePadding * 2, 360);
+      const expectedVideoHeight = Math.round(modalWidth * 1.5);
+      const videoHeight = Math.min(Math.max(expectedVideoHeight, 300), Math.floor(screenHeight * 0.62));
+      const buttonGap = 20;
+
+      this.setData({
+        guideMaskStyle: `left:0;top:0;width:${screenWidth}px;height:${screenHeight}px;padding:${topPadding}px ${sidePadding}px ${bottomPadding}px;`,
+        guideModalWrapStyle: `width:${modalWidth}px;`,
+        guideModalStyle: `width:${modalWidth}px;`,
+        guideVideoBoxStyle: `height:${videoHeight}px;`,
+        guideActionsStyle: `margin-top:${buttonGap}px;`
+      });
+    } catch (err) {
+      console.warn('[Home] 初始化引导布局失败:', err);
+    }
   },
 
   /**
