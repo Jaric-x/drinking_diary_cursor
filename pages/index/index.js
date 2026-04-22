@@ -9,9 +9,9 @@ const guideVideoCacheService = require('../../services/guide-video-cache.js');
 // 浏览状态存储键
 const VIEW_STATE_KEY = 'home_view_state';
 const GUIDE_VIDEO_SOURCES = [
-  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/final1.mp4',
-  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/final2.mp4',
-  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/final3.mp4'
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/GIFdone1.gif',
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/GIFdone2.gif',
+  'cloud://cloud1-6ghdp0iubeb94db8.636c-cloud1-6ghdp0iubeb94db8-1391679868/guide/GIFdone3.gif'
 ];
 
 Page({
